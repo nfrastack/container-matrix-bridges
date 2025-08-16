@@ -1,3 +1,9 @@
+## 0.0.31 2025-08-16 <dave at tiredofit dot ca>
+
+   ### Added
+      - Add armv8/aarch64 builds
+
+
 ## 0.0.30 2025-06-18 <dave at tiredofit dot ca>
 
    ### Added
