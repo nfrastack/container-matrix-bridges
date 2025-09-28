@@ -1,3 +1,11 @@
+## 0.0.32 2025-09-28 <dave at tiredofit dot ca>
+
+   ### Added
+      - Mautrix Signal 0.8.7
+      - Mautrix Meta 0.5.1
+      - Matrix Whatsapp 0.12.5
+
+
 ## 0.0.31 2025-08-16 <dave at tiredofit dot ca>
 
    ### Added
