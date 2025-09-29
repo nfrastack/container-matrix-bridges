@@ -1,0 +1,20 @@
+#!/command/with-contenv bash
+# SPDX-FileCopyrightText: © 2025 Nfrastack <code@nfrastack.com>
+#
+# SPDX-License-Identifier: MIT
+
+source /container/base/functions/container/init
+check_container_initialized
+
+source /container/functions/00-container
+SERVICE_NAME="bridge_whatsapp"
+source /container/defaults/matrix_bridges
+source /container/defaults/bridge_whatsapp
+
+check_container_initialized
+#check_service_initialized 10-matrix_bridges
+liftoff
+
+print_start "Starting Whatsapp bridge version ${WHATSAPP_VERSION}"
+sudo -u matrix exec /usr/bin/mautrix-whatsapp \
+                                                -c "${WHATSAPP_CONFIG_PATH}"/"${WHATSAPP_CONFIG_FILE}"

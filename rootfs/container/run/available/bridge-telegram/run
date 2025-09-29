@@ -1,0 +1,21 @@
+#!/command/with-contenv bash
+# SPDX-FileCopyrightText: © 2025 Nfrastack <code@nfrastack.com>
+#
+# SPDX-License-Identifier: MIT
+
+source /container/base/functions/container/init
+check_container_initialized
+
+source /assets/functions/00-container
+PROCESS_NAME="bridge_telegram"
+source /assets/defaults/matrix_bridges
+source /assets/defaults/bridge_telegram
+
+check_container_initialized
+#check_service_initialized 10-matrix_bridges
+liftoff
+cd "${LOG_PATH}"
+print_start "Starting Telegram bridge version ${TELEGRAM_VERSION}"
+sudo -u matrix exec python3 \
+                            -m mautrix_telegram \
+                            -c "${TELEGRAM_CONFIG_PATH}"/"${TELEGRAM_CONFIG_FILE}"

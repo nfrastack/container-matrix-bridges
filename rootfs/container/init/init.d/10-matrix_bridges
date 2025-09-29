@@ -1,0 +1,78 @@
+#!/command/with-contenv bash
+# SPDX-FileCopyrightText: © 2025 Nfrastack <code@nfrastack.com>
+#
+# SPDX-License-Identifier: MIT
+
+source /container/base/functions/container/init
+
+source /container/functions/matrix_bridges
+set -a
+source /container/defaults/matrix_bridges
+set +a
+prepare_service
+
+SERVICE_NAME="matrix-bridges"
+
+matrixbridges_bootstrap_filesystem
+matrixbridges_setup_bridges
+
+if check_container_restarted ; then
+    if var_true "${ENABLE_DISCORD}" ; then
+        matrixbridges_configure_discord
+    else
+        rm -rf /container/run/available/bridge-discord
+    fi
+
+    if var_true "${ENABLE_FACEBOOK}" ; then
+        matrixbridges_configure_facebook
+    else
+        rm -rf /container/run/available/bridge-facebook
+    fi
+
+    if var_true "${ENABLE_GOOGLECHAT}" ; then
+        matrixbridges_configure_googlechat
+    else
+        rm -rf /container/run/available/bridge-googlechat
+    fi
+
+    if var_true "${ENABLE_HOOKSHOT}" || var_true "${ENABLE_FEEDS}" || var_true "${ENABLE_FIGMA}" || var_true "${ENABLE_GITHUB}" || var_true "${ENABLE_GITLAB}" || var_true "${ENABLE_JIRA}" || var_true "${ENABLE_WEBHOOKS}" ; then
+        matrixbridges_configure_hookshot
+    else
+        rm -rf /container/run/available/bridge-hookshot
+    fi
+
+    if var_true "${ENABLE_INSTAGRAM}" ; then
+        matrixbridges_configure_instagram
+    else
+        rm -rf /container/run/available/bridge-instagram
+    fi
+
+    if var_true "${ENABLE_SIGNAL}" ; then
+        matrixbridges_configure_signal
+    else
+        rm -rf /container/run/available/bridge-signal
+    fi
+
+    if var_true "${ENABLE_SLACK}" ; then
+        matrixbridges_configure_slack
+    else
+        rm -rf /container/run/available/bridge-slack
+    fi
+
+    if var_true "${ENABLE_TELEGRAM}" ; then
+        matrixbridges_configure_telegram
+    else
+        rm -rf /container/run/available/bridge-telegram
+    fi
+
+    if var_true "${ENABLE_WHATSAPP}" ; then
+        matrixbridges_configure_whatsapp
+    else
+        rm -rf /container/run/available/bridge-whatsapp
+    fi
+fi
+
+custom_files /container/data/custom /
+custom_scripts
+
+liftoff

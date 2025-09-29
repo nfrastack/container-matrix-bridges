@@ -1,0 +1,20 @@
+#!/command/with-contenv bash
+# SPDX-FileCopyrightText: © 2025 Nfrastack <code@nfrastack.com>
+#
+# SPDX-License-Identifier: MIT
+
+source /container/base/functions/container/init
+check_container_initialized
+
+source /assets/functions/00-container
+PROCESS_NAME="bridge_discord"
+source /assets/defaults/matrix_bridges
+source /assets/defaults/bridge_discord
+
+check_container_initialized
+#check_service_initialized 10-matrix_bridges
+liftoff
+
+print_start "Starting Discord bridge version ${DISCORD_VERSION}"
+sudo -u matrix exec /usr/bin/mautrix-discord \
+                                                -c "${WHATSAPP_CONFIG_PATH}"/"${WHATSAPP_CONFIG_FILE}"

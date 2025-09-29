@@ -1,3 +1,9 @@
+## 1.0.0pre 2025-09-28 <code at nfrastack dot com>
+
+   ### Added
+      - Switch to nfrastack/container-base
+      - Alpine 3.22
+
 ## 0.0.32 2025-09-28 <dave at tiredofit dot ca>
 
    ### Added
