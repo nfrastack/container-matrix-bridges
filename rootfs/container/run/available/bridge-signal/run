@@ -4,16 +4,15 @@
 # SPDX-License-Identifier: MIT
 
 source /container/base/functions/container/init
-check_container_initialized
-
-source /container/functions/00-container
-SERVICE_NAME="bridge_signal"
 source /container/defaults/matrix_bridges
 source /container/defaults/bridge_signal
 
+SERVICE_NAME="bridge_signal"
+
 check_container_initialized
+
 liftoff
 
-print_start "Starting Signal bridge version ${SIGNAL_VERSION}"
-sudo -u matrix /usr/bin/mautrix-signal \
+print_start "Starting Signal bridge version $(grep -o "ADD: Mautrix Signal .* |" /container/build/${IMAGE_NAME/\//_}/build.log | awk '{print $4}')"
+sudo -u matrix /usr/local/bin/mautrix-signal \
                                         -c "${SIGNAL_CONFIG_PATH}"/"${SIGNAL_CONFIG_FILE}"

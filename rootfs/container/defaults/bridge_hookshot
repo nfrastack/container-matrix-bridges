@@ -1,4 +1,6 @@
-#!/command/with-contenv bash
+# SPDX-FileCopyrightText: © 2025 Nfrastack <code@nfrastack.com>
+#
+# SPDX-License-Identifier: MIT
 
 #.gitlab.instances.gitlab.com = env(HOOKSHOT_) |
 #FIGMA=${FIGMA_:-"your-team-id}"

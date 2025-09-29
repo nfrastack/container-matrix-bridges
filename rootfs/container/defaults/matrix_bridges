@@ -1,4 +1,6 @@
-#!/command/with-contenv bash
+# SPDX-FileCopyrightText: © 2025 Nfrastack <code@nfrastack.com>
+#
+# SPDX-License-Identifier: MIT
 
 CONFIG_PATH=${CONFIG_PATH:-"/config/"}
 DATA_PATH=${DATA_PATH:-"/data/"}

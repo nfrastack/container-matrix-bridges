@@ -1,4 +1,6 @@
-#!/command/with-contenv bash
+# SPDX-FileCopyrightText: © 2025 Nfrastack <code@nfrastack.com>
+#
+# SPDX-License-Identifier: MIT
 
 SLACK_APPSERVICE_ID=${SLACK_APPSERVICE_ID:-"slack"}
 SLACK_BOT_AVATAR=${SLACK_BOT_AVATAR:-"mxc://maunium.net/pVtzLmChZejGxLqmXtQjFxem"}

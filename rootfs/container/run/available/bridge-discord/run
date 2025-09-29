@@ -4,17 +4,16 @@
 # SPDX-License-Identifier: MIT
 
 source /container/base/functions/container/init
-check_container_initialized
-
-source /container/functions/00-container
-SERVICE_NAME="bridge_discord"
 source /container/defaults/matrix_bridges
 source /container/defaults/bridge_discord
 
+SERVICE_NAME="bridge_discord"
+
 check_container_initialized
+
 #check_service_initialized 10-matrix_bridges
 liftoff
 
-print_start "Starting Discord bridge version ${DISCORD_VERSION}"
+print_start "Starting Discord bridge version $(grep -o "ADD: Mautrix Discord .* |" /container/build/${IMAGE_NAME/\//_}/build.log | awk '{print $4}')"
 sudo -u matrix exec /usr/bin/mautrix-discord \
-                                                -c "${WHATSAPP_CONFIG_PATH}"/"${WHATSAPP_CONFIG_FILE}"
+                                                -c "${DISCORD_CONFIG_PATH}"/"${DISCORD_CONFIG_FILE}"
