@@ -1732,24 +1732,24 @@ matrixbridges_configure_signal() {
         s6-setuidgid matrix yq -i   '
                                         .homeserver.address = env(SIGNAL_HOMESERVER_ADDRESS) |
                                         .homeserver.domain = env(SIGNAL_HOMESERVER_DOMAIN) |
-                                        .homeserver.verify_ssl = env(SIGNAL_HOMESERVER_TLS_VERIFY) |
                                         .homeserver.software = env(SIGNAL_HOMESERVER_SOFTWARE) |
-                                        .homeserver.http_retry_count = env(SIGNAL_HOMESERVER_HTTP_RETRY_COUNT) |
                                         .homeserver.status_endpoint = env(SIGNAL_HOMESERVER_STATUS_ENDPOINT) |
                                         .homeserver.message_send_checkpoint_endpoint = env(SIGNAL_HOMESERVER_MESSAGE_SEND_CHECKPOINT_ENDPOINT) |
-                                        .homeserver.connection_limit = env(SIGNAL_HOMESERVER_CONNECTION_LIMIT) |
                                         .homeserver.async_media = env(SIGNAL_HOMESERVER_ENABLE_ASYNC_UPLOADS) |
                                         .homeserver.ping_interval_seconds = env(SIGNAL_HOMESERVER_PING_INTERVAL)
+                                    ' "${SIGNAL_CONFIG_PATH}"/"${SIGNAL_CONFIG_FILE}"
+
+        s6-setuidgid matrix yq -i   '
+                                        .database.type = env(SIGNAL_DB_TYPE) |
+                                        .database.uri = env(SIGNAL_DB_STRING) |
+                                        .database.max_open_conns = env(SIGNAL_DB_MAX_OPEN_CONNECTIONS) |
+                                        .database.max_idle_conns = env(SIGNAL_DB_MAX_IDLE_CONNECTIONS)
                                     ' "${SIGNAL_CONFIG_PATH}"/"${SIGNAL_CONFIG_FILE}"
 
         s6-setuidgid matrix yq -i   '
                                         .appservice.address = env(SIGNAL_APPSERVER_ADDRESS) |
                                         .appservice.hostname = env(SIGNAL_LISTEN_IP) |
                                         .appservice.port = env(SIGNAL_LISTEN_PORT) |
-                                        .appservice.database.type = env(SIGNAL_DB_TYPE) |
-                                        .appservice.database.uri = env(SIGNAL_DB_STRING) |
-                                        .appservice.database.max_open_conns = env(SIGNAL_DB_MAX_OPEN_CONNECTIONS) |
-                                        .appservice.database.max_idle_conns = env(SIGNAL_DB_MAX_IDLE_CONNECTIONS) |
                                         .appservice.id = env(SIGNAL_APPSERVICE_ID) |
                                         .appservice.bot.username = env(SIGNAL_BOT_USERNAME) |
                                         .appservice.bot.displayname = env(SIGNAL_BOT_DISPLAYNAME) |
@@ -1789,51 +1789,88 @@ matrixbridges_configure_signal() {
                                         ' "${SIGNAL_CONFIG_PATH}"/"${SIGNAL_CONFIG_FILE}"
         fi
 
-        s6-setuidgid matrix yq -i   '
-                                        .metrics.enabled = env(SIGNAL_ENABLE_METRICS) |
-                                        .metrics.listen = env(SIGNAL_METRICS_LISTEN_IP_PORT)
-                                    ' "${SIGNAL_CONFIG_PATH}"/"${SIGNAL_CONFIG_FILE}"
+        #s6-setuidgid matrix yq -i   '
+        #                                .metrics.enabled = env(SIGNAL_ENABLE_METRICS) |
+        #                                .metrics.listen = env(SIGNAL_METRICS_LISTEN_IP_PORT)
+        #                            ' "${SIGNAL_CONFIG_PATH}"/"${SIGNAL_CONFIG_FILE}"
+
+#                                            .unused.bridge.bridge_notices = env(SIGNAL_BRIDGE_NOTICES) |
+#                                            .unused.bridge.delivery_receipts = env(SIGNAL_ENABLE_DELIVERY_RECEIPTS) |
+#                                            .unused.bridge.message_status_events = env(SIGNAL_ENABLE_MESSAGE_STATUS_EVENTS) |
+#                                            .unused.bridge.message_error_notices = env(SIGNAL_ENABLE_MESSAGE_ERROR_NOTICES) |
+#                                            .unused.bridge.sync_direct_chat_list = env(SIGNAL_SYNC_DIRECT_CHAT_LIST) |
+#
+#                                            .unused.bridge.public_portals = env(SIGNAL_PUBLIC_PORTALS) |
+#                                            .unused.bridge.caption_in_message = env(SIGNAL_CAPTION_IN_MESSAGE) |
+#                                            .unused.bridge.federate_rooms = env(SIGNAL_FEDERATE_ROOMS) |
+#                                            .unused.bridge.double_puppet_allow_discovery = env(SIGNAL_DOUBLE_PUPPET_ALLOW_DISCOVERY) |
+#                                            .unused.bridge.management_room_text.welcome = env(SIGNAL_MANAGEMENT_ROOM_TEXT_WELCOME) |
+#                                            .unused.bridge.management_room_text.welcome_connected = env(SIGNAL_MANAGEMENT_ROOM_TEXT_WELCOME_CONNECTED) |
+#                                            .unused.bridge.management_room_text.welcome_unconnected = env(SIGNAL_MANAGEMENT_ROOM_TEXT_WELCOME_UNCONNECTED) |
+#                                            .unused.bridge.management_room_text.additional_help = "'$(echo ${SIGNAL_MANAGEMENT_ROOM_TEXT_ADDITIONAL_HELP})'" |
 
         if var_true "${SIGNAL_CONFIGURE_BRIDGE}" ; then
             # TODO
             # .bridge.message_handling_timeout
             # .bridge.login_shared_secret_map + double_puppet
             s6-setuidgid matrix yq -i   '
-                                            .bridge.username_template = strenv(SIGNAL_TEMPLATE_USERNAME) |
-                                            .bridge.displayname_template = strenv(SIGNAL_TEMPLATE_DISPLAYNAME) |
-                                            .bridge.private_chat_portal_meta = env(SIGNAL_PRIVATE_CHAT_PORTAL_META) |
-                                            .bridge.use_contact_avatars = env(SIGNAL_USE_CONTACT_AVATARS) |
-                                            .bridge.number_in_topic = env(SIGNAL_INCLUDE_NUMBER_IN_TOPIC) |
-                                            .bridge.note_to_self_avatar = env(SIGNAL_NOTE_TO_SELF_AVATAR) |
-                                            .bridge.portal_message_buffer = env(SIGNAL_PORTAL_MESSAGE_BUFFER) |
-                                            .bridge.personal_filtering_spaces = env(SIGNAL_PERSONAL_FILTERING_SPACES) |
-                                            .bridge.bridge_notices = env(SIGNAL_BRIDGE_NOTICES) |
-                                            .bridge.delivery_receipts = env(SIGNAL_ENABLE_DELIVERY_RECEIPTS) |
-                                            .bridge.message_status_events = env(SIGNAL_ENABLE_MESSAGE_STATUS_EVENTS) |
-                                            .bridge.message_error_notices = env(SIGNAL_ENABLE_MESSAGE_ERROR_NOTICES) |
-                                            .bridge.sync_direct_chat_list = env(SIGNAL_SYNC_DIRECT_CHAT_LIST) |
-                                            .bridge.resend_bridge_info = env(SIGNAL_RESEND_BRIDGE_INFO) |
-                                            .bridge.public_portals = env(SIGNAL_PUBLIC_PORTALS) |
-                                            .bridge.caption_in_message = env(SIGNAL_CAPTION_IN_MESSAGE) |
-                                            .bridge.federate_rooms = env(SIGNAL_FEDERATE_ROOMS) |
-                                            .bridge.double_puppet_allow_discovery = env(SIGNAL_DOUBLE_PUPPET_ALLOW_DISCOVERY) |
                                             .bridge.command_prefix = "'$(echo ${SIGNAL_COMMAND_PREFIX})'" |
-                                            .bridge.management_room_text.welcome = env(SIGNAL_MANAGEMENT_ROOM_TEXT_WELCOME) |
-                                            .bridge.management_room_text.welcome_connected = env(SIGNAL_MANAGEMENT_ROOM_TEXT_WELCOME_CONNECTED) |
-                                            .bridge.management_room_text.welcome_unconnected = env(SIGNAL_MANAGEMENT_ROOM_TEXT_WELCOME_UNCONNECTED) |
-                                            .bridge.management_room_text.additional_help = "'$(echo ${SIGNAL_MANAGEMENT_ROOM_TEXT_ADDITIONAL_HELP})'" |
-                                            .bridge.encryption.allow = env(SIGNAL_ENCRYPTION_ALLOW) |
-                                            .bridge.encryption.default = env(SIGNAL_ENCRYPTION_DEFAULT) |
-                                            .bridge.encryption.appservice = env(SIGNAL_ENCRYPTION_APPSERVICE) |
-                                            .bridge.encryption.require = env(SIGNAL_ENCRYPTION_REQUIRE) |
-                                            .bridge.encryption.allow_key_sharing = env(SIGNAL_ENCRYPTION_ALLOW_KEY_SHARING) |
-                                            .bridge.encryption.verification_levels.receive = env(SIGNAL_ENCRYPTION_VERIFY_LEVELS_RECEIVE) |
-                                            .bridge.encryption.verification_levels.send = env(SIGNAL_ENCRYPTION_VERIFY_LEVELS_SEND) |
-                                            .bridge.encryption.verification_levels.share = env(SIGNAL_ENCRYPTION_VERIFY_LEVELS_SHARE) |
-                                            .bridge.encryption.rotation.enable_custom = env(SIGNAL_ENCRYPTION_ROTATION_ENABLE_CUSTOM) |
-                                            .bridge.encryption.rotation.milliseconds = env(SIGNAL_ENCRYPTION_ROTATION_MILLISECONDS) |
-                                            .bridge.encryption.rotation.messages = env(SIGNAL_ENCRYPTION_ROTATION_MESSAGES)
+                                            .bridge.personal_filtering_spaces = env(SIGNAL_PERSONAL_FILTERING_SPACES) |
+                                            .bridge.private_chat_portal_meta = env(SIGNAL_PRIVATE_CHAT_PORTAL_META) |
+                                            .bridge.resend_bridge_info = env(SIGNAL_RESEND_BRIDGE_INFO)
                                         ' "${SIGNAL_CONFIG_PATH}"/"${SIGNAL_CONFIG_FILE}"
+
+            s6-setuidgid matrix yq -i   '
+                                            .encryption.allow = env(SIGNAL_ENCRYPTION_ALLOW) |
+                                            .encryption.default = env(SIGNAL_ENCRYPTION_DEFAULT) |
+                                            .encryption.require = env(SIGNAL_ENCRYPTION_REQUIRE) |
+                                            .encryption.appservice = env(SIGNAL_ENCRYPTION_APPSERVICE) |
+                                            .encryption.msc4190 = env(SIGNAL_ENCRYPTION_MSC4190) |
+                                            .encryption.allow_key_sharing = env(SIGNAL_ENCRYPTION_ALLOW_KEY_SHARING) |
+                                            .encryption.verification_levels.receive = env(SIGNAL_ENCRYPTION_VERIFY_LEVELS_RECEIVE) |
+                                            .encryption.verification_levels.send = env(SIGNAL_ENCRYPTION_VERIFY_LEVELS_SEND) |
+                                            .encryption.verification_levels.share = env(SIGNAL_ENCRYPTION_VERIFY_LEVELS_SHARE) |
+                                            .encryption.rotation.enable_custom = env(SIGNAL_ENCRYPTION_ROTATION_ENABLE_CUSTOM) |
+                                            .encryption.rotation.milliseconds = env(SIGNAL_ENCRYPTION_ROTATION_MILLISECONDS) |
+                                            .encryption.rotation.messages = env(SIGNAL_ENCRYPTION_ROTATION_MESSAGES)
+                                        ' "${SIGNAL_CONFIG_PATH}"/"${SIGNAL_CONFIG_FILE}"
+
+            # The following yq commands set values for keys that have moved to different sections in the config file.
+
+            # username_template is now under appservice
+            s6-setuidgid matrix yq -i   '
+                .appservice.username_template = env(SIGNAL_TEMPLATE_USERNAME)
+            ' "${SIGNAL_CONFIG_PATH}"/"${SIGNAL_CONFIG_FILE}"
+
+            # displayname_template is now under network
+            s6-setuidgid matrix yq -i   '
+                .network.displayname_template = env(SIGNAL_TEMPLATE_DISPLAYNAME)
+            ' "${SIGNAL_CONFIG_PATH}"/"${SIGNAL_CONFIG_FILE}"
+
+            # use_contact_avatars is now under network
+            s6-setuidgid matrix yq -i   '
+                .network.use_contact_avatars = env(SIGNAL_USE_CONTACT_AVATARS)
+            ' "${SIGNAL_CONFIG_PATH}"/"${SIGNAL_CONFIG_FILE}"
+
+            # number_in_topic is now under network
+            s6-setuidgid matrix yq -i   '
+                .network.number_in_topic = env(SIGNAL_INCLUDE_NUMBER_IN_TOPIC)
+            ' "${SIGNAL_CONFIG_PATH}"/"${SIGNAL_CONFIG_FILE}"
+
+            # note_to_self_avatar is now under network
+            s6-setuidgid matrix yq -i   '
+                .network.note_to_self_avatar = env(SIGNAL_NOTE_TO_SELF_AVATAR)
+            ' "${SIGNAL_CONFIG_PATH}"/"${SIGNAL_CONFIG_FILE}"
+
+            # bridge_notices, delivery_receipts, message_status_events, message_error_notices, sync_direct_chat_list, federate_rooms are now under matrix
+            s6-setuidgid matrix yq -i   '
+                .matrix.bridge_notices = env(SIGNAL_BRIDGE_NOTICES) |
+                .matrix.delivery_receipts = env(SIGNAL_ENABLE_DELIVERY_RECEIPTS) |
+                .matrix.message_status_events = env(SIGNAL_ENABLE_MESSAGE_STATUS_EVENTS) |
+                .matrix.message_error_notices = env(SIGNAL_ENABLE_MESSAGE_ERROR_NOTICES) |
+                .matrix.sync_direct_chat_list = env(SIGNAL_SYNC_DIRECT_CHAT_LIST) |
+                .matrix.federate_rooms = env(SIGNAL_FEDERATE_ROOMS)
+            ' "${SIGNAL_CONFIG_PATH}"/"${SIGNAL_CONFIG_FILE}"
         fi
 
         s6-setuidgid matrix yq -i 'del(.bridge.permissions)' "${SIGNAL_CONFIG_PATH}"/"${SIGNAL_CONFIG_FILE}"
@@ -2624,19 +2661,23 @@ matrixbridges_configure_whatsapp() {
                                     ' "${WHATSAPP_CONFIG_PATH}"/"${WHATSAPP_CONFIG_FILE}"
 
         s6-setuidgid matrix yq -i   '
+                                        .database.type = env(WHATSAPP_DB_TYPE) |
+                                        .database.uri = env(WHATSAPP_DB_STRING) |
+                                        .database.max_open_conns = env(WHATSAPP_DB_CONNECTIONS_MAX_OPEN) |
+                                        .database.max_idle_conns = env(WHATSAPP_DB_CONNECTIONS_MAX_IDLE) |
+                                        .database.max_conn_idle_time = env(WHATSAPP_DB_CONNECTIONS_MAX_IDLE_LIFETIME) |
+                                        .database.max_conn_lifetime = env(WHATSAPP_DB_CONNECTIONS_MAX_LIFETIME)
+                                    ' "${WHATSAPP_CONFIG_PATH}"/"${WHATSAPP_CONFIG_FILE}"
+
+        s6-setuidgid matrix yq -i   '
                                         .appservice.address = env(WHATSAPP_APPSERVER_ADDRESS) |
                                         .appservice.hostname = env(WHATSAPP_LISTEN_IP) |
                                         .appservice.port = env(WHATSAPP_LISTEN_PORT) |
-                                        .appservice.database.type = env(WHATSAPP_DB_TYPE) |
-                                        .appservice.database.uri = env(WHATSAPP_DB_STRING) |
-                                        .appservice.database.max_open_conns = env(WHATSAPP_DB_CONNECTIONS_MAX_OPEN) |
-                                        .appservice.database.max_idle_conns = env(WHATSAPP_DB_CONNECTIONS_MAX_IDLE) |
-                                        .appservice.database.max_conn_idle_time = env(WHATSAPP_DB_CONNECTIONS_MAX_IDLE_LIFETIME) |
-                                        .appservice.database.max_conn_lifetime = env(WHATSAPP_DB_CONNECTIONS_MAX_LIFETIME) |
                                         .appservice.id = env(WHATSAPP_APPSERVICE_ID) |
-                                        .appservice.bot_username = env(WHATSAPP_BOT_USERNAME) |
-                                        .appservice.bot_displayname = env(WHATSAPP_BOT_DISPLAYNAME) |
-                                        .appservice.bot_avatar = env(WHATSAPP_BOT_AVATAR) |
+                                        .appservice.username_template = strenv(WHATSAPP_TEMPLATE_USERNAME) |
+                                        .appservice.bot.username = env(WHATSAPP_BOT_USERNAME) |
+                                        .appservice.bot.displayname = env(WHATSAPP_BOT_DISPLAYNAME) |
+                                        .appservice.bot.avatar = env(WHATSAPP_BOT_AVATAR) |
                                         .appservice.ephemeral_events = env(WHATSAPP_ENABLE_EPHEMERAL_EVENTS) |
                                         .appservice.async_transactions = env(WHATSAPP_ENABLE_ASYNC_TRANSACTIONS)
                                     ' "${WHATSAPP_CONFIG_PATH}"/"${WHATSAPP_CONFIG_FILE}"
@@ -2688,30 +2729,33 @@ matrixbridges_configure_whatsapp() {
                                         .whatsapp.browser_name = env(WHATSAPP_BROWSER_NAME)
                                     ' "${WHATSAPP_CONFIG_PATH}"/"${WHATSAPP_CONFIG_FILE}"
 
-        if var_true "${DISCORD_CONFIGURE_BRIDGE}" ; then
+
+#                                            .unused.bridge.username_template = strenv(WHATSAPP_TEMPLATE_USERNAME) |
+#                                            .unused.bridge.portal_message_buffer = env(WHATSAPP_PORTAL_MESSAGE_BUFFER) |
+
+        if var_true "${WHATSAPP_CONFIGURE_BRIDGE}" ; then
             s6-setuidgid matrix yq -i   '
-                                            .bridge.username_template = strenv(WHATSAPP_TEMPLATE_USERNAME) |
-                                            .bridge.displayname_template = strenv(WHATSAPP_TEMPLATE_DISPLAYNAME) |
+                                            .network.displayname_template = strenv(WHATSAPP_TEMPLATE_DISPLAYNAME) |
                                             .bridge.personal_filtering_spaces = env(WHATSAPP_PERSONAL_FILTERING_SPACES) |
-                                            .bridge.delivery_receipts = env(WHATSAPP_ENABLE_DELIVERY_RECEIPTS) |
-                                            .bridge.message_status_events = env(WHATSAPP_ENABLE_MESSAGE_STATUS_EVENTS) |
-                                            .bridge.message_error_notices = env(WHATSAPP_ENABLE_MESSAGE_ERROR_NOTICES) |
-                                            .bridge.call_start_notices = env(WHATSAPP_ENABLE_CALL_START_NOTICES) |
-                                            .bridge.identity_change_notices = env(WHATSAPP_ENABLE_IDENTITY_CHANGE_NOTICES) |
-                                            .bridge.portal_message_buffer = env(WHATSAPP_PORTAL_MESSAGE_BUFFER) |
-                                            .bridge.federate_rooms = env(WHATSAPP_FEDERATE_ROOMS) |
+                                            .matrix.delivery_receipts = env(WHATSAPP_ENABLE_DELIVERY_RECEIPTS) |
+                                            .matrix.message_status_events = env(WHATSAPP_ENABLE_MESSAGE_STATUS_EVENTS) |
+                                            .matrix.message_error_notices = env(WHATSAPP_ENABLE_MESSAGE_ERROR_NOTICES) |
+                                            .network.call_start_notices = env(WHATSAPP_ENABLE_CALL_START_NOTICES) |
+                                            .network.identity_change_notices = env(WHATSAPP_ENABLE_IDENTITY_CHANGE_NOTICES) |
+                                            .matrix.federate_rooms = env(WHATSAPP_FEDERATE_ROOMS) |
                                             .bridge.command_prefix = "'$(echo ${WHATSAPP_COMMAND_PREFIX})'" |
-                                            .bridge.encryption.allow = env(WHATSAPP_ENCRYPTION_ALLOW) |
-                                            .bridge.encryption.default = env(WHATSAPP_ENCRYPTION_DEFAULT) |
-                                            .bridge.encryption.appservice = env(WHATSAPP_ENCRYPTION_APPSERVICE) |
-                                            .bridge.encryption.require = env(WHATSAPP_ENCRYPTION_REQUIRE) |
-                                            .bridge.encryption.allow_key_sharing = env(WHATSAPP_ENCRYPTION_ALLOW_KEY_SHARING) |
-                                            .bridge.encryption.verification_levels.receive = env(WHATSAPP_ENCRYPTION_VERIFY_LEVELS_RECEIVE) |
-                                            .bridge.encryption.verification_levels.send = env(WHATSAPP_ENCRYPTION_VERIFY_LEVELS_SEND) |
-                                            .bridge.encryption.verification_levels.share = env(WHATSAPP_ENCRYPTION_VERIFY_LEVELS_SHARE) |
-                                            .bridge.encryption.rotation.enable_custom = env(WHATSAPP_ENCRYPTION_ROTATION_ENABLE_CUSTOM) |
-                                            .bridge.encryption.rotation.milliseconds = env(WHATSAPP_ENCRYPTION_ROTATION_MILLISECONDS) |
-                                            .bridge.encryption.rotation.messages = env(WHATSAPP_ENCRYPTION_ROTATION_MESSAGES)
+                                            .encryption.allow = env(WHATSAPP_ENCRYPTION_ALLOW) |
+                                            .encryption.default = env(WHATSAPP_ENCRYPTION_DEFAULT) |
+                                            .encryption.appservice = env(WHATSAPP_ENCRYPTION_APPSERVICE) |
+                                            .encryption.require = env(WHATSAPP_ENCRYPTION_REQUIRE) |
+                                            .encryption.msc4190 = env(WHATSAPP_ENCRYPTION_MSC4190) |
+                                            .encryption.allow_key_sharing = env(WHATSAPP_ENCRYPTION_ALLOW_KEY_SHARING) |
+                                            .encryption.verification_levels.receive = env(WHATSAPP_ENCRYPTION_VERIFY_LEVELS_RECEIVE) |
+                                            .encryption.verification_levels.send = env(WHATSAPP_ENCRYPTION_VERIFY_LEVELS_SEND) |
+                                            .encryption.verification_levels.share = env(WHATSAPP_ENCRYPTION_VERIFY_LEVELS_SHARE) |
+                                            .encryption.rotation.enable_custom = env(WHATSAPP_ENCRYPTION_ROTATION_ENABLE_CUSTOM) |
+                                            .encryption.rotation.milliseconds = env(WHATSAPP_ENCRYPTION_ROTATION_MILLISECONDS) |
+                                            .encryption.rotation.messages = env(WHATSAPP_ENCRYPTION_ROTATION_MESSAGES)
                                         ' "${WHATSAPP_CONFIG_PATH}"/"${WHATSAPP_CONFIG_FILE}"
         fi
         s6-setuidgid matrix yq -i 'del(.bridge.permissions)' "${WHATSAPP_CONFIG_PATH}"/"${WHATSAPP_CONFIG_FILE}"

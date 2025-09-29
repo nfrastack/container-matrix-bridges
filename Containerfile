@@ -2,9 +2,10 @@
 #
 # SPDX-License-Identifier: MIT
 
-ARG BASE_IMAGE
-ARG DISTRO
-ARG DISTRO_VARIANT
+ARG \
+    BASE_IMAGE \
+    DISTRO \
+    DISTRO_VARIANT
 
 FROM ${BASE_IMAGE}:${DISTRO}_${DISTRO_VARIANT}
 
@@ -54,6 +55,7 @@ RUN echo "" && \
     MATRIXBRIDGES_RUN_DEPS_ALPINE="  \
                                         postgresql-client \
                                         sqlite \
+                                        yq-go \
                                   "  && \
     DISCORD_BUILD_DEPS_ALPINE=" \
                                 go \
@@ -179,9 +181,10 @@ RUN echo "" && \
     #                && \
     #cd /usr/src && \
     #clone_git_repo "${DISCORD_REPO_URL}" "${DISCORD_VERSION}" && \
+    #go build -o /usr/local/bin/mautrix-discord && \
     #mkdir -p /container/data/matrix-bridges/discord && \
-    #go build -o /usr/bin/mautrix-discord && \
-    #cp -R example-config.yaml /container/data/matrix-bridges/discord/example.config.yaml && \
+    #/usr/local/bin/mautrix-discord -c /container/data/matrix-bridges/discord/config.yaml.example -e && \
+    #container_build_log add "Mautrix Discord" "${DISCORD_VERSION}" "${DISCORD_REPO_URL}" && \
     #\
     #
     #package install \
@@ -202,6 +205,7 @@ RUN echo "" && \
     #cp -R yarn.lock /opt/hookshot && \
     #cp -R lib /opt/hookshot && \
     #cp -R public /opt/hookshot && \
+    #container_build_log add "Matrix Hookshot" "${HOOKSHOT_VERSION}" "${HOOKSHOT_REPO_URL}" && \
     #\
     #
     #package install \
@@ -212,8 +216,9 @@ RUN echo "" && \
     #clone_git_repo "${META_REPO_URL}" "${META_VERSION}" /usr/src/meta && \
     #export MAUTRIX_VERSION=$(cat go.mod | grep 'maunium.net/go/mautrix ' | awk '{ print $2 }') && \
     #export GO_LDFLAGS="-s -w -X main.Tag=$(git describe --exact-match --tags 2>/dev/null) -X main.Commit=$(git rev-parse HEAD) -X 'main.BuildTime=`date '+%b %_d %Y, %H:%M:%S'`' -X 'maunium.net/go/mautrix.GoModVersion=$MAUTRIX_VERSION'" && \
-    #go build -o /usr/bin/mautrix-meta -ldflags "$GO_LDFLAGS" ./cmd/mautrix-meta "$@" && \
-    #\
+    #go build -o /usr/local/bin/mautrix-meta -ldflags "$GO_LDFLAGS" ./cmd/mautrix-meta "$@" && \
+    #mkdir -p /container/data/matrix-bridges/meta && \
+    #container_build_log add "Mautrix Meta" "${META_VERSION}" "${META_REPO_URL}" && \
     #
     #package install \
     #                IMESASGE_BUILD_DEPS \
@@ -221,22 +226,11 @@ RUN echo "" && \
     #                && \
     #cd /usr/src && \
     #clone_git_repo "${IMESSAGE_REPO_URL}" "${IMESSAGE_VERSION}" /usr/src/imessage && \
+    #go build -o /usr/local/bin/mautrix-imessage && \
     #mkdir -p /container/data/matrix-bridges/imessage && \
-    #go build -o /usr/bin/mautrix-imessage && \
-    #cp -R example-config.yaml /container/data/matrix-bridges/imessage/example.config.yaml && \
+    #/usr/local/bin/mautrix-imessage -c /container/data/matrix-bridges/imessage/config.yaml.example -e && \
+    #container_build_log add "Mautrix IMessage" "${IMESSAGE_VERSION}" "${IMESSAGE_REPO_URL}" && \
     #\
-    #
-    #package install \
-    #                SLACK_BUILD_DEPS \
-    #                SLACK_RUN_DEPS \
-    #                && \
-    #cd /usr/src && \
-    #clone_git_repo "${SLACK_REPO_URL}" "${SLACK_VERSION}" /usr/src/slack && \
-    #MAUTRIX_VERSION=$(cat go.mod | grep 'maunium.net/go/mautrix ' | awk '{ print $2 }' | head -n1) && \
-    #GO_LDFLAGS="-s -w -X main.Tag=$(git describe --exact-match --tags 2>/dev/null) -X main.Commit=$(git rev-parse HEAD) -X 'main.BuildTime=`date -Iseconds`' -X 'maunium.net/go/mautrix.GoModVersion=$MAUTRIX_VERSION'" && \
-    #go build -ldflags="$GO_LDFLAGS" -o /usr/bin/mautrix-slack ./cmd/mautrix-slack "$@" && \
-    #mkdir -p /container/data/matrix-bridges/slack && \
-    #
     package install \
                     SIGNAL_BUILD_DEPS \
                     SIGNAL_RUN_DEPS \
@@ -254,8 +248,23 @@ RUN echo "" && \
     MAUTRIX_VERSION=$(cat go.mod | grep 'maunium.net/go/mautrix ' | awk '{ print $2 }') && \
     GO_LDFLAGS="-X main.Tag=$(git describe --exact-match --tags 2>/dev/null) -X main.Commit=$(git rev-parse HEAD) -X 'main.BuildTime=`date -Iseconds`' -X 'maunium.net/go/mautrix.GoModVersion=$MAUTRIX_VERSION'" && \
     LIBRARY_PATH=/usr/src/signal/pkg/libsignalgo/libsignal/target/release \
-    go build -o /usr/bin/mautrix-signal ./cmd/mautrix-signal && \
+    go build -o /usr/local/bin/mautrix-signal ./cmd/mautrix-signal && \
     mkdir -p /container/data/matrix-bridges/signal && \
+    /usr/local/bin/mautrix-signal -c /container/data/matrix-bridges/signal/config.yaml.example -e && \
+    container_build_log add "Mautrix Signal" "${SIGNAL_VERSION}" "${SIGNAL_REPO_URL}" && \
+    #
+    #package install \
+    #                SLACK_BUILD_DEPS \
+    #                SLACK_RUN_DEPS \
+    #                && \
+    #cd /usr/src && \
+    #clone_git_repo "${SLACK_REPO_URL}" "${SLACK_VERSION}" /usr/src/slack && \
+    #MAUTRIX_VERSION=$(cat go.mod | grep 'maunium.net/go/mautrix ' | awk '{ print $2 }' | head -n1) && \
+    #GO_LDFLAGS="-s -w -X main.Tag=$(git describe --exact-match --tags 2>/dev/null) -X main.Commit=$(git rev-parse HEAD) -X 'main.BuildTime=`date -Iseconds`' -X 'maunium.net/go/mautrix.GoModVersion=$MAUTRIX_VERSION'" && \
+    #go build -ldflags="$GO_LDFLAGS" -o /usr/local/bin/mautrix-slack ./cmd/mautrix-slack "$@" && \
+    #mkdir -p /container/data/matrix-bridges/slack && \
+    #/usr/local/bin/mautrix-slack -c /container/data/matrix-bridges/slack/config.yaml.example -e && \
+    #container_build_log add "Mautrix Slack" "${SLACK_VERSION}" "${SLACK_REPO_URL}" && \
     #
     #package install \
     #                TELEGRAM_BUILD_DEPS \
@@ -272,6 +281,7 @@ RUN echo "" && \
     #            && \
     #mkdir -p /container/data/matrix-bridges/telegram && \
     #cp -R mautrix_telegram/example-config.yaml /container/data/matrix-bridges/telegram/example.config.yaml && \
+    #container_build_log add "Mautrix Telegram" "${TELEGRAM_VERSION}" "${TELEGRAM_REPO_URL}" && \
     #\
     #
     package install \
@@ -282,19 +292,20 @@ RUN echo "" && \
     clone_git_repo "${WHATSAPP_REPO_URL}" "${WHATSAPP_VERSION}" /usr/src/whatsapp && \
     MAUTRIX_VERSION=$(cat go.mod | grep 'maunium.net/go/mautrix ' | awk '{ print $2 }') && \
     GO_LDFLAGS="-s -w -X main.Tag=$(git describe --exact-match --tags 2>/dev/null) -X main.Commit=$(git rev-parse HEAD) -X 'main.BuildTime=`date -Iseconds`' -X 'maunium.net/go/mautrix.GoModVersion=$MAUTRIX_VERSION'" && \
-    go build -ldflags="$GO_LDFLAGS" -o /usr/bin/mautrix-whatsapp ./cmd/mautrix-whatsapp && \
-#    mkdir -p /container/data/matrix-bridges/whatsapp && \
-#    cp -R example-config.yaml /container/data/matrix-bridges/whatsapp/example.config.yaml && \
+    go build -ldflags="$GO_LDFLAGS" -o /usr/local/bin/mautrix-whatsapp ./cmd/mautrix-whatsapp && \
+    mkdir -p /container/data/matrix-bridges/whatsapp && \
+    /usr/local/bin/mautrix-whatsapp -c /container/data/matrix-bridges/whatsapp/config.yaml.example -e && \
+    container_build_log add "Mautrix WhatsApp" "${WHATSAPP_VERSION}" "${WHATSAPP_REPO_URL}" && \
     chown matrix:matrix /container/data/matrix-bridges/ && \
     package remove  \
                     MATRIXBRIDGES_BUILD_DEPS \
-                    DISCORD_BUILD_DEPS \
-                    HOOKSHOT_BUILD_DEPS \
-                    IMESSAGE_BUILD_DEPS \
-                    META_BUILD_DEPS \
+                    #DISCORD_BUILD_DEPS \
+                    #HOOKSHOT_BUILD_DEPS \
+                    #IMESSAGE_BUILD_DEPS \
+                    #META_BUILD_DEPS \
                     SIGNAL_BUILD_DEPS \
-                    SLACK_BUILD_DEPS \
-                    TELEGRAM_BUILD_DEPS \
+                    #SLACK_BUILD_DEPS \
+                    #TELEGRAM_BUILD_DEPS \
                     WHATSAPP_BUILD_DEPS \
                     && \
     package cleanup && \

@@ -1,4 +1,6 @@
-#!/command/with-contenv bash
+# SPDX-FileCopyrightText: © 2025 Nfrastack <code@nfrastack.com>
+#
+# SPDX-License-Identifier: MIT
 
 INSTAGRAM_LISTEN_PORT=${INSTAGRAM_LISTEN_PORT:-"29330"}
 #

@@ -4,17 +4,16 @@
 # SPDX-License-Identifier: MIT
 
 source /container/base/functions/container/init
-check_container_initialized
-
-source /container/functions/00-container
-SERVICE_NAME="bridge_instagram"
 source /container/defaults/matrix_bridges
 source /container/defaults/bridge_instagram
 
+SERVICE_NAME="bridge_instagram"
+
 check_container_initialized
+
 #check_service_initialized 10-matrix_bridges
 liftoff
 
-print_start "Starting Instagram bridge version ${META_VERSION}"
-sudo -u matrix /usr/bin/mautrix-meta \
+print_start "Starting Instagram bridge version $(grep -o "ADD: Mautrix Meta .* |" /container/build/${IMAGE_NAME/\//_}/build.log | awk '{print $4}')"
+sudo -u matrix /usr/local/bin/mautrix-meta \
                             -c "${INSTAGRAM_CONFIG_PATH}"/"${INSTRAGRAM_CONFIG_FILE}"
