@@ -6,10 +6,10 @@
 source /container/base/functions/container/init
 check_container_initialized
 
-source /assets/functions/00-container
-PROCESS_NAME="bridge_discord"
-source /assets/defaults/matrix_bridges
-source /assets/defaults/bridge_discord
+source /container/functions/00-container
+SERVICE_NAME="bridge_discord"
+source /container/defaults/matrix_bridges
+source /container/defaults/bridge_discord
 
 check_container_initialized
 #check_service_initialized 10-matrix_bridges

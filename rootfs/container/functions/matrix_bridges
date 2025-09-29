@@ -283,7 +283,7 @@ matrixbridges_configure_discord2() {
     fi
 }
 
-configure_discord() {
+matrixbridges_configure_discord() {
     if [ "${SETUP_TYPE,,}" = "auto" ] ; then
         set -a
         source /container/defaults/bridge_discord
@@ -2860,7 +2860,7 @@ matrixbridges_configure_whatsapp() {
     fi
 }
 
-setup_bridges() {
+matrixbridges_setup_bridges() {
     if [ -f "/container/state/matrix_bridges/mode" ]; then
         print_debug "[setup_bridges] Importing BRIDGE environment generated variables"
         source /container/state/matrix_bridges/mode

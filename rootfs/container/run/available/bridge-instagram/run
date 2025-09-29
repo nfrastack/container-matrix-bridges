@@ -6,10 +6,10 @@
 source /container/base/functions/container/init
 check_container_initialized
 
-source /assets/functions/00-container
-PROCESS_NAME="bridge_instagram"
-source /assets/defaults/matrix_bridges
-source /assets/defaults/bridge_instagram
+source /container/functions/00-container
+SERVICE_NAME="bridge_instagram"
+source /container/defaults/matrix_bridges
+source /container/defaults/bridge_instagram
 
 check_container_initialized
 #check_service_initialized 10-matrix_bridges
