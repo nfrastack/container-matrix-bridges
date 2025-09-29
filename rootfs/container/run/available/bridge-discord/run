@@ -14,6 +14,6 @@ check_container_initialized
 #check_service_initialized 10-matrix_bridges
 liftoff
 
-print_start "Starting Discord bridge version $(grep -o "ADD: Mautrix Discord .* |" /container/build/${IMAGE_NAME/\//_}/build.log | awk '{print $4}')"
-sudo -u matrix exec /usr/local/bin/mautrix-discord \
-                                                -c "${DISCORD_CONFIG_PATH}"/"${DISCORD_CONFIG_FILE}"
+print_start "Starting Discord bridge version ${DISCORD_VERSION}"
+sudo -u matrix exec /usr/bin/mautrix-discord \
+                                                -c "${WHATSAPP_CONFIG_PATH}"/"${WHATSAPP_CONFIG_FILE}"
