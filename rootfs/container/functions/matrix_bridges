@@ -2735,15 +2735,19 @@ matrixbridges_configure_whatsapp() {
 
         if var_true "${WHATSAPP_CONFIGURE_BRIDGE}" ; then
             s6-setuidgid matrix yq -i   '
-                                            .network.displayname_template = strenv(WHATSAPP_TEMPLATE_DISPLAYNAME) |
+                                            .bridge.command_prefix = "'$(echo ${WHATSAPP_COMMAND_PREFIX})'" |
                                             .bridge.personal_filtering_spaces = env(WHATSAPP_PERSONAL_FILTERING_SPACES) |
                                             .matrix.delivery_receipts = env(WHATSAPP_ENABLE_DELIVERY_RECEIPTS) |
-                                            .matrix.message_status_events = env(WHATSAPP_ENABLE_MESSAGE_STATUS_EVENTS) |
-                                            .matrix.message_error_notices = env(WHATSAPP_ENABLE_MESSAGE_ERROR_NOTICES) |
-                                            .network.call_start_notices = env(WHATSAPP_ENABLE_CALL_START_NOTICES) |
-                                            .network.identity_change_notices = env(WHATSAPP_ENABLE_IDENTITY_CHANGE_NOTICES) |
                                             .matrix.federate_rooms = env(WHATSAPP_FEDERATE_ROOMS) |
-                                            .bridge.command_prefix = "'$(echo ${WHATSAPP_COMMAND_PREFIX})'" |
+                                            .matrix.message_error_notices = env(WHATSAPP_ENABLE_MESSAGE_ERROR_NOTICES) |
+                                            .matrix.message_status_events = env(WHATSAPP_ENABLE_MESSAGE_STATUS_EVENTS) |
+                                            .network.call_start_notices = env(WHATSAPP_ENABLE_CALL_START_NOTICES) |
+                                            .network.displayname_template = strenv(WHATSAPP_TEMPLATE_DISPLAYNAME) |
+                                            .network.identity_change_notices = env(WHATSAPP_ENABLE_IDENTITY_CHANGE_NOTICES)
+                                        ' "${WHATSAPP_CONFIG_PATH}"/"${WHATSAPP_CONFIG_FILE}"
+
+        if var_true "${WHATSAPP_CONFIGURE_BRIDGE}" ; then
+            s6-setuidgid matrix yq -i   '
                                             .encryption.allow = env(WHATSAPP_ENCRYPTION_ALLOW) |
                                             .encryption.default = env(WHATSAPP_ENCRYPTION_DEFAULT) |
                                             .encryption.appservice = env(WHATSAPP_ENCRYPTION_APPSERVICE) |
@@ -2758,6 +2762,7 @@ matrixbridges_configure_whatsapp() {
                                             .encryption.rotation.messages = env(WHATSAPP_ENCRYPTION_ROTATION_MESSAGES)
                                         ' "${WHATSAPP_CONFIG_PATH}"/"${WHATSAPP_CONFIG_FILE}"
         fi
+
         s6-setuidgid matrix yq -i 'del(.bridge.permissions)' "${WHATSAPP_CONFIG_PATH}"/"${WHATSAPP_CONFIG_FILE}"
         set -f
 

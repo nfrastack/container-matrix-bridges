@@ -24,7 +24,7 @@ liftoff
 
 print_start "Starting Hookshot ($(echo ${hookshot_bridges} | sed "s| $||g")) bridge version $(grep -o "ADD: Matrix Hookshot .* |" /container/build/${IMAGE_NAME/\//_}/build.log | awk '{print $4}')"
 cd /opt/hookshot
-sudo -u matrix exec node bin/matrix-hookshot/App/BridgeApp.js \
+exec sudo -u matrix node bin/matrix-hookshot/App/BridgeApp.js \
                                                                 /data/config.yml \
                                                                 /data/registration.yml
 
