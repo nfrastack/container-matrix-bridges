@@ -3,12 +3,9 @@
 # SPDX-License-Identifier: MIT
 
 ARG \
-    BASE_IMAGE \
-    DISTRO \
-    DISTRO_VARIANT
+    BASE_IMAGE
 
-FROM ${BASE_IMAGE}:${DISTRO}_${DISTRO_VARIANT}
-
+FROM ${BASE_IMAGE}
 LABEL \
         org.opencontainers.image.title="Matrix Bridges" \
         org.opencontainers.image.description="Containerized bridges to interconnect services via Matrix" \
@@ -55,10 +52,8 @@ RUN echo "" && \
     MATRIXBRIDGES_RUN_DEPS_ALPINE="  \
                                         postgresql-client \
                                         sqlite \
-                                        yq-go \
                                   "  && \
     DISCORD_BUILD_DEPS_ALPINE=" \
-                                go \
                                 olm-dev \
                               " && \
     DISCORD_RUN_DEPS_ALPINE="  \
@@ -77,7 +72,6 @@ RUN echo "" && \
                                 yarn \
                              "  && \
     IMESSAGE_BUILD_DEPS_ALPINE="    \
-                                    go \
                                     olm-dev \
                                " && \
     IMESSAGE_RUN_DEPS_ALPINE="  \
@@ -85,7 +79,6 @@ RUN echo "" && \
                                 ffmpeg \
                              " && \
     META_BUILD_DEPS_ALPINE=" \
-                               go \
                                olm-dev \
                             " && \
     META_RUN_DEPS_ALPINE="  \
@@ -98,7 +91,6 @@ RUN echo "" && \
                                 cmake \
                                 g++ \
                                 git \
-                                go \
                                 make \
                                 musl-dev \
                                 olm-dev \
@@ -110,7 +102,6 @@ RUN echo "" && \
                                 ffmpeg \
                               " && \
     SLACK_BUILD_DEPS_ALPINE=" \
-                                go \
                                 olm-dev \
                             " && \
     SLACK_RUN_DEPS_ALPINE=" \
@@ -152,7 +143,6 @@ RUN echo "" && \
                                 py3-unpaddedbase64 \
                              " && \
     WHATSAPP_BUILD_DEPS_ALPINE=" \
-                                    go \
                                     olm-dev \
                                 " && \
     WHATSAPP_RUN_DEPS_ALPINE="  \
@@ -174,6 +164,8 @@ RUN echo "" && \
                     MATRIXBRIDGES_BUILD_DEPS \
                     MATRIXBRIDGES_RUN_DEPS \
                     && \
+    package build go && \
+    package build yq && \
     #
     #package install \
     #                DISCORD_BUILD_DEPS \
