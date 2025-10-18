@@ -17,14 +17,14 @@ LABEL \
         org.opencontainers.image.licenses="MIT"
 
 ARG \
-      DISCORD_VERSION="v0.7.1" \
+      DISCORD_VERSION="v0.7.5" \
       HOOKSHOT_VERSION="5.2.1" \
-      IMESSAGE_VERSION="master" \
-      META_VERSION="v0.5.3" \
-      SIGNAL_VERSION="v0.8.7" \
-      SLACK_VERSION="v0.1.3" \
+      IMESSAGE_VERSION="7a7312c59b0dd56c54f14ebfd047fcb7c32b6ea6" \
+      META_VERSION="v25.10" \
+      SIGNAL_VERSION="v25.10" \
+      SLACK_VERSION="v25.10" \
       TELEGRAM_VERSION="v0.15.1" \
-      WHATSAPP_VERSION="v0.12.5" \
+      WHATSAPP_VERSION="v25.10" \
       DISCORD_REPO_URL="https://github.com/mautrix/discord" \
       HOOKSHOT_REPO_URL="https://github.com/matrix-org/matrix-hookshot" \
       IMESSAGE_REPO_URL="https://github.com/mautrix/imessage" \
@@ -42,7 +42,6 @@ ENV \
     FFMPEG_BINARY=/usr/bin/ffmpeg \
     IMAGE_NAME="nfrastack/matrix-bridges" \
     IMAGE_REPO_URL="https://github.com/nfrastack/conmtainer-matrix-bridges/"
-
 
 RUN echo "" && \
     MATRIXBRIDGES_BUILD_DEPS_ALPINE=" \
