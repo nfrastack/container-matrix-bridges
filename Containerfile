@@ -95,6 +95,7 @@ RUN echo "" && \
                                 olm-dev \
                                 protoc \
                                 rust \
+                                zlib-dev \
                              " && \
     SIGNAL_RUN_DEPS_ALPINE="  \
                                 olm \
