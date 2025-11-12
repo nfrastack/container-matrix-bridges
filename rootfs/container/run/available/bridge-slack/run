@@ -17,4 +17,4 @@ liftoff
 
 print_start "Starting Slack bridge version $(grep -o "ADD: Mautrix Slack .* |" /container/build/${IMAGE_NAME/\//_}/build.log | awk '{print $4}')"
 exec sudo -u matrix /usr/local/bin/mautrix-slack \
-                                            -c "${SLACK_CONFIG_PATH}"/"${SLACK_CONFIG_FILE}"
+                                            -c "${SLACK_CONFIG_PATH%/}"/"${SLACK_CONFIG_FILE}"

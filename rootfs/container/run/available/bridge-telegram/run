@@ -18,4 +18,4 @@ cd "${LOG_PATH}"
 print_start "Starting Telegram bridge version $(grep -o "ADD: Mautrix Telegram .* |" /container/build/${IMAGE_NAME/\//_}/build.log | awk '{print $4}')"
 exec sudo -u matrix python3 \
                             -m mautrix_telegram \
-                            -c "${TELEGRAM_CONFIG_PATH}"/"${TELEGRAM_CONFIG_FILE}"
+                            -c "${TELEGRAM_CONFIG_PATH%/}"/"${TELEGRAM_CONFIG_FILE}"

@@ -16,4 +16,4 @@ liftoff
 
 print_start "Starting Instagram bridge version $(grep -o "ADD: Mautrix Meta .* |" /container/build/${IMAGE_NAME/\//_}/build.log | awk '{print $4}')"
 exec sudo -u matrix /usr/local/bin/mautrix-meta \
-                            -c "${INSTAGRAM_CONFIG_PATH}"/"${INSTRAGRAM_CONFIG_FILE}"
+                            -c "${INSTAGRAM_CONFIG_PATH%/}"/"${INSTRAGRAM_CONFIG_FILE}"

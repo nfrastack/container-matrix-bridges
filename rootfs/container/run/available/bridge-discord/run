@@ -16,4 +16,4 @@ liftoff
 
 print_start "Starting Discord bridge version ${DISCORD_VERSION}"
 exec udo -u matrix exec /usr/bin/mautrix-discord \
-                                                -c "${WHATSAPP_CONFIG_PATH}"/"${WHATSAPP_CONFIG_FILE}"
+                                                -c "${WHATSAPP_CONFIG_PATH%/}"/"${WHATSAPP_CONFIG_FILE}"

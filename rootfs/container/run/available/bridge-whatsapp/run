@@ -14,4 +14,4 @@ liftoff
 
 print_start "Starting Whatsapp bridge version $(grep -o "ADD: Mautrix WhatsApp .* |" /container/build/${IMAGE_NAME/\//_}/build.log | awk '{print $4}')"
 exec sudo -u matrix /usr/local/bin/mautrix-whatsapp \
-                                                -c "${WHATSAPP_CONFIG_PATH}"/"${WHATSAPP_CONFIG_FILE}"
+                                                -c "${WHATSAPP_CONFIG_PATH%/}"/"${WHATSAPP_CONFIG_FILE}"

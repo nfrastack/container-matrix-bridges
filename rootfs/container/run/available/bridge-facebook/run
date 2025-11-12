@@ -17,4 +17,4 @@ liftoff
 cd "${LOG_PATH}"
 print_start "Starting Facebook bridge version $(grep -o "ADD: Mautrix Meta .* |" /container/build/${IMAGE_NAME/\//_}/build.log | awk '{print $4}')"
 exec sudo -u matrix /usr/local/bin/mautrix-meta \
-                                    -c "${FACEBOOK_CONFIG_PATH}"/"${FACEBOOK_CONFIG_FILE}"
+                                    -c "${FACEBOOK_CONFIG_PATH%/}"/"${FACEBOOK_CONFIG_FILE}"
