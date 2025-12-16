@@ -28,16 +28,16 @@ matrixbridges_configure_discord2() {
 
         case "${DISCORD_DB_TYPE,,}" in
             postgres* )
-                sanity_var DISCORD_DB_USER "DB Username for Signal"
-                sanity_var DISCORD_DB_PASS "DB Password for Signal"
-                sanity_var DISCORD_DB_HOST "DB Host for Signal"
-                sanity_var DISCORD_DB_NAME "DB Name for Signal"
+                sanity_var DISCORD_DB_USER "DB Username for Discord"
+                sanity_var DISCORD_DB_PASS "DB Password for Discord"
+                sanity_var DISCORD_DB_HOST "DB Host for Discord"
+                sanity_var DISCORD_DB_NAME "DB Name for Discord"
                 counter=0
                 export PGPASSWORD=${DISCORD_DB_PASS}
                 until pg_isready --dbname="${DISCORD_DB_NAME}" --host="${DISCORD_DB_HOST}" --port="${DISCORD_DB_PORT}" --username="${DISCORD_DB_USER}" -q ; do
                     sleep 5
                     (( counter+=5 ))
-                    print_warn "Postgres Host '${DISCORD_DB_HOST}' is not accessible, retrying.. ($counter seconds so far)"
+                    print_warn "[configure_discord] Postgres Host '${DISCORD_DB_HOST}' is not accessible, retrying.. ($counter seconds so far)"
                 done
                 export DISCORD_DB_TYPE="postgres"
                 export DISCORD_DB_STRING=${DISCORD_DB_STRING:-"postgres://${DISCORD_DB_USER}:${DISCORD_DB_PASS}@${DISCORD_DB_HOST}:${DISCORD_DB_PORT}/${DISCORD_DB_NAME}"}
@@ -171,12 +171,12 @@ matrixbridges_configure_discord2() {
             discordrelays=$(echo "${DISCORD_PERMISSIONS_RELAY}" | tr "," "\n")
             for discordrelay in $discordrelays; do
                 if [ "$discordrelay" = "*" ] ; then
-                    export SIGNALRELAY="PLACEHOLDERASTERISK"
+                    export DISCORDRELAY="PLACEHOLDERASTERISK"
                 else
-                    export SIGNALRELAY=$discordrelay
+                    export DISCORDRELAY=$discordrelay
                 fi
                 s6-setuidgid matrix yq -i   '
-                                                .bridge.permissions.[  "'$(echo ${SIGNALRELAY})'" ]+= "relay"
+                                                .bridge.permissions.[  "'$(echo ${DISCORDRELAY})'" ]+= "relay"
                                             ' "${DISCORD_CONFIG_PATH%/}"/"${DISCORD_CONFIG_FILE}"
             done
         fi
@@ -185,12 +185,12 @@ matrixbridges_configure_discord2() {
             discordadmins=$(echo "${DISCORD_PERMISSIONS_ADMIN}" | tr "," "\n")
             for discordadmin in $discordadmins; do
                 if [ "$discordadmin" = "*" ] ; then
-                    export SIGNALADMIN="PLACEHOLDERASTERISK"
+                    export DISCORDADMIN="PLACEHOLDERASTERISK"
                 else
-                    export SIGNALADMIN=$discordadmin
+                    export DISCORDADMIN=$discordadmin
                 fi
                 s6-setuidgid matrix yq -i   '
-                                                .bridge.permissions.[ "'$(echo ${SIGNALADMIN})'" ] += "admin"
+                                                .bridge.permissions.[ "'$(echo ${DISCORDADMIN})'" ] += "admin"
                                             ' "${DISCORD_CONFIG_PATH%/}"/"${DISCORD_CONFIG_FILE}"
             done
         fi
@@ -199,12 +199,12 @@ matrixbridges_configure_discord2() {
             discordusers=$(echo "${DISCORD_PERMISSIONS_USER}" | tr "," "\n")
             for discorduser in $discordusers; do
                 if [ "$discorduser" = "*" ] ; then
-                    export SIGNALUSER="PLACEHOLDERASTERISK"
+                    export DISCORDUSER="PLACEHOLDERASTERISK"
                 else
-                    export SIGNALUSER=$discorduser
+                    export DISCORDUSER=$discorduser
                 fi
                 s6-setuidgid matrix yq -i   '
-                                                .bridge.permissions.[env(SIGNALUSER)] += "user"
+                                                .bridge.permissions.[env(DISCORDUSER)] += "user"
                                             ' "${DISCORD_CONFIG_PATH%/}"/"${DISCORD_CONFIG_FILE}"
             done
         fi
@@ -307,7 +307,7 @@ matrixbridges_configure_discord() {
                 until pg_isready --dbname="${DISCORD_DB_NAME}" --host="${DISCORD_DB_HOST}" --port="${DISCORD_DB_PORT}" --username="${DISCORD_DB_USER}" -q ; do
                     sleep 5
                     (( counter+=5 ))
-                    print_warn "Postgres Host '${DISCORD_DB_HOST}' is not accessible, retrying.. ($counter seconds so far)"
+                    print_warn "[configure_discord] Postgres Host '${DISCORD_DB_HOST}' is not accessible, retrying.. ($counter seconds so far)"
                 done
                 if var_true "${DISCORD_DB_ENABLE_TLS}" ; then
                     discord_db_tls="?sslmode=enable"
@@ -567,7 +567,7 @@ matrixbridges_configure_facebook() {
                 until pg_isready --dbname="${FACEBOOK_DB_NAME}" --host="${FACEBOOK_DB_HOST}" --port="${FACEBOOK_DB_PORT}" --username="${FACEBOOK_DB_USER}" -q ; do
                     sleep 5
                     (( counter+=5 ))
-                    print_warn "Postgres Host '${FACEBOOK_DB_HOST}' is not accessible, retrying.. ($counter seconds so far)"
+                    print_warn "[configure_facebook] Postgres Host '${FACEBOOK_DB_HOST}' is not accessible, retrying.. ($counter seconds so far)"
                 done
                 export FACEBOOK_DB_TYPE="postgres"
                 export FACEBOOK_DB_STRING=${FACEBOOK_DB_STRING:-"postgres://${FACEBOOK_DB_USER}:${FACEBOOK_DB_PASS}@${FACEBOOK_DB_HOST}:${FACEBOOK_DB_PORT}/${FACEBOOK_DB_NAME}?sslmode=${FACEBOOK_DB_SSL_MODE,,}"}
@@ -835,7 +835,7 @@ matrixbridges_configure_googlechat() {
                 until pg_isready --dbname="${GOOGLECHAT_DB_NAME}" --host="${GOOGLECHAT_DB_HOST}" --port="${GOOGLECHAT_DB_PORT}" --username="${GOOGLECHAT_DB_USER}" -q ; do
                     sleep 5
                     (( counter+=5 ))
-                    print_warn "Postgres Host '${GOOGLECHAT_DB_HOST}' is not accessible, retrying.. ($counter seconds so far)"
+                    print_warn "[configure_googlechat] Postgres Host '${GOOGLECHAT_DB_HOST}' is not accessible, retrying.. ($counter seconds so far)"
                 done
                 export GOOGLECHAT_DB_STRING=${GOOGLECHAT_DB_STRING:-"postgres://${GOOGLECHAT_DB_USER}:${GOOGLECHAT_DB_PASS}@${GOOGLECHAT_DB_HOST}:${GOOGLECHAT_DB_PORT}/${GOOGLECHAT_DB_NAME}"}
             set +x
@@ -1422,7 +1422,7 @@ matrixbridges_configure_instagram() {
         set -a
         source /container/defaults/bridge_instagram
         set +a
-        print_debug "[configure_meta]"
+        print_debug "[configure_instagram] "
 
         create_folder \
                         "${INSTAGRAM_CONFIG_PATH},\
@@ -1441,7 +1441,7 @@ matrixbridges_configure_instagram() {
                 until pg_isready --dbname="${INSTAGRAM_DB_NAME}" --host="${INSTAGRAM_DB_HOST}" --port="${INSTAGRAM_DB_PORT}" --username="${INSTAGRAM_DB_USER}" -q ; do
                     sleep 5
                     (( counter+=5 ))
-                    print_warn "Postgres Host '${INSTAGRAM_DB_HOST}' is not accessible, retrying.. ($counter seconds so far)"
+                    print_warn "[configure_instagram]  Postgres Host '${INSTAGRAM_DB_HOST}' is not accessible, retrying.. ($counter seconds so far)"
                 done
                 export INSTAGRAM_DB_TYPE="postgres"
                 export INSTAGRAM_DB_STRING=${INSTAGRAM_DB_STRING:-"postgres://${INSTAGRAM_DB_USER}:${INSTAGRAM_DB_PASS}@${INSTAGRAM_DB_HOST}:${INSTAGRAM_DB_PORT}/${INSTAGRAM_DB_NAME}?sslmode=${INSTAGRAM_DB_SSL_MODE,,}"}
@@ -1710,7 +1710,7 @@ matrixbridges_configure_signal() {
                 until pg_isready --dbname="${SIGNAL_DB_NAME}" --host="${SIGNAL_DB_HOST}" --port="${SIGNAL_DB_PORT}" --username="${SIGNAL_DB_USER}" -q ; do
                     sleep 5
                     (( counter+=5 ))
-                    print_warn "Postgres Host '${SIGNAL_DB_HOST}' is not accessible, retrying.. ($counter seconds so far)"
+                    print_warn "[configure_signal] Postgres Host '${SIGNAL_DB_HOST}' is not accessible, retrying.. ($counter seconds so far)"
                 done
                 export SIGNAL_DB_TYPE="postgres"
                 export SIGNAL_DB_STRING=${SIGNAL_DB_STRING:-"postgres://${SIGNAL_DB_USER}:${SIGNAL_DB_PASS}@${SIGNAL_DB_HOST}:${SIGNAL_DB_PORT}/${SIGNAL_DB_NAME}?sslmode=${SIGNAL_DB_SSL_MODE,,}"}
@@ -2016,7 +2016,7 @@ matrixbridges_configure_slack() {
                 until pg_isready --dbname="${SLACK_DB_NAME}" --host="${SLACK_DB_HOST}" --port="${SLACK_DB_PORT}" --username="${SLACK_DB_USER}" -q ; do
                     sleep 5
                     (( counter+=5 ))
-                    print_warn "Postgres Host '${SLACK_DB_HOST}' is not accessible, retrying.. ($counter seconds so far)"
+                    print_warn "[configure_slack] Postgres Host '${SLACK_DB_HOST}' is not accessible, retrying.. ($counter seconds so far)"
                 done
                 if var_true "${SLACK_DB_ENABLE_TLS}" ; then
                     slack_db_tls="?sslmode=enable"
@@ -2261,7 +2261,7 @@ matrixbridges_configure_telegram() {
                 until pg_isready --dbname="${TELEGRAM_DB_NAME}" --host="${TELEGRAM_DB_HOST}" --port="${TELEGRAM_DB_PORT}" --username="${TELEGRAM_DB_USER}" -q ; do
                     sleep 5
                     (( counter+=5 ))
-                    print_warn "Postgres Host '${TELEGRAM_DB_HOST}' is not accessible, retrying.. ($counter seconds so far)"
+                    print_warn "[configure_telegram] Postgres Host '${TELEGRAM_DB_HOST}' is not accessible, retrying.. ($counter seconds so far)"
                 done
                 export TELEGRAM_DB_STRING=${TELEGRAM_DB_STRING:-"postgres://${TELEGRAM_DB_USER}:${TELEGRAM_DB_PASS}@${TELEGRAM_DB_HOST}:${TELEGRAM_DB_PORT}/${TELEGRAM_DB_NAME}"}
             ;;
@@ -2627,7 +2627,7 @@ matrixbridges_configure_whatsapp() {
                 until pg_isready --dbname="${WHATSAPP_DB_NAME}" --host="${WHATSAPP_DB_HOST}" --port="${WHATSAPP_DB_PORT}" --username="${WHATSAPP_DB_USER}" -q ; do
                     sleep 5
                     (( counter+=5 ))
-                    print_warn "Postgres Host '${WHATSAPP_DB_HOST}' is not accessible, retrying.. ($counter seconds so far)"
+                    print_warn "[configure_whatsapp] Postgres Host '${WHATSAPP_DB_HOST}' is not accessible, retrying.. ($counter seconds so far)"
                 done
                 if var_true "${WHATSAPP_DB_ENABLE_TLS}" ; then
                     whatsapp_db_tls="?sslmode=enable"
