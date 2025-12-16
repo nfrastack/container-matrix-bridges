@@ -2817,7 +2817,7 @@ matrixbridges_configure_whatsapp() {
 
         case "${WHATSAPP_LOG_TYPE,,}" in
             "both" )
-                create_logrotate bridge_whatsapp "${WHATSAPP_LOG_PATH%/}"/"${WHATSAPP_LOG_FILE}" bridge_ matrix matrixwhatsapp
+                create_logrotate bridge_whatsapp "${WHATSAPP_LOG_PATH%/}"/"${WHATSAPP_LOG_FILE}" bridge_whatsapp matrix matrix
                 yq -i '
                         .logging.writers = [
                             {
@@ -2845,7 +2845,7 @@ matrixbridges_configure_whatsapp() {
                       ' "${WHATSAPP_CONFIG_PATH%/}"/"${WHATSAPP_CONFIG_FILE}"
             ;;
             "file" )
-                create_logrotate bridge_whatsapp "${WHATSAPP_LOG_PATH%/}"/"${WHATSAPP_LOG_FILE}" bridge_ matrix matrixwhatsapp
+                create_logrotate bridge_whatsapp "${WHATSAPP_LOG_PATH%/}"/"${WHATSAPP_LOG_FILE}" bridge_whatsapp matrix matrix
                 yq -i '
                         .logging.writers = [
                             {
