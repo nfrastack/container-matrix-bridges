@@ -10,7 +10,7 @@ matrixbridges_bootstrap_filesystem() {
                 ${REGISTRATION_PATH}" \
                 matrix:matrix 755
 
-    create_logrotate matrix_bridges "${LOG_PATH%/}"/*.log matrix matrix
+    #create_logrotate matrix_bridges "${LOG_PATH%/}"/*.log matrix_bridges matrix matrix
 }
 
 matrixbridges_configure_discord2() {
@@ -217,7 +217,7 @@ matrixbridges_configure_discord2() {
         yq -i '.logging.min_level = env(DISCORD_LOG_LEVEL)' "${DISCORD_CONFIG_PATH%/}"/"${DISCORD_CONFIG_FILE}"
         case "${DISCORD_LOG_TYPE,,}" in
             "both" )
-                create_logrotate bridge_discord "${DISCORD_LOG_PATH%/}"/"${DISCORD_LOG_FILE}" bridge_ matrix matrixdiscord
+                create_logrotate bridge_discord "${DISCORD_LOG_PATH%/}"/"${DISCORD_LOG_FILE}" bridge_discord matrix matrix
                 yq -i '
                         .logging.writers = [
                             {
@@ -245,7 +245,7 @@ matrixbridges_configure_discord2() {
                       ' "${DISCORD_CONFIG_PATH%/}"/"${DISCORD_CONFIG_FILE}"
             ;;
             "file" )
-                create_logrotate bridge_discord "${DISCORD_LOG_PATH%/}"/"${DISCORD_LOG_FILE}" bridge_ matrix matrixdiscord
+                create_logrotate bridge_discord "${DISCORD_LOG_PATH%/}"/"${DISCORD_LOG_FILE}" bridge_discord matrix matrix
                 yq -i '
                         .logging.writers = [
                             {
@@ -495,7 +495,7 @@ matrixbridges_configure_discord() {
 
         case "${DISCORD_LOG_TYPE,,}" in
             "both" )
-                create_logrotate bridge_discord "${DISCORD_LOG_PATH%/}"/"${DISCORD_LOG_FILE}" matrix matrix bridge_discord
+                create_logrotate bridge_discord "${DISCORD_LOG_PATH%/}"/"${DISCORD_LOG_FILE}" bridge_discord matrix matrix
                 export DISCORD_LOG_TYPE="console,file"
             ;;
             "console" )
@@ -503,7 +503,7 @@ matrixbridges_configure_discord() {
                 export DISCORD_LOG_FILE="null"
             ;;
             "file" )
-                create_logrotate bridge_discord "${DISCORD_LOG_PATH%/}"/"${DISCORD_LOG_FILE}" bridge_matrix matrix
+                create_logrotate bridge_discord "${DISCORD_LOG_PATH%/}"/"${DISCORD_LOG_FILE}" bridge_discord matrix matrix
                 export DISCORD_LOG_TYPE="file"
             ;;
         esac
@@ -518,7 +518,7 @@ matrixbridges_configure_discord() {
                                         .logging.file_json = env(DISCORD_LOG_FILE_JSON)
                                     ' "${DISCORD_CONFIG_PATH%/}"/"${DISCORD_CONFIG_FILE}"
 
-        create_logrotate bridge_discord "${DISCORD_LOG_PATH%/}"/"${DISCORD_LOG_FILE}" bridge_ matrix matrixdiscord
+        create_logrotate bridge_discord "${DISCORD_LOG_PATH%/}"/"${DISCORD_LOG_FILE}" bridge_discord matrix matrix
 
         if [ ! -f "${DISCORD_REGISTRATION_PATH%/}"/"${DISCORD_REGISTRATION_FILE}" ] ; then
             print_notice "[configure_discord] Didn't find a registration file. Generating to '${DISCORD_REGISTRATION_PATH}/${DISCORD_REGISTRATION_FILE}'"
@@ -746,7 +746,7 @@ matrixbridges_configure_facebook() {
         yq -i '.logging.min_level = env(FACEBOOK_LOG_LEVEL)' "${FACEBOOK_CONFIG_PATH%/}"/"${FACEBOOK_CONFIG_FILE}"
         case "${FACEBOOK_LOG_TYPE,,}" in
             "both" )
-                create_logrotate bridge_facebook "${FACEBOOK_LOG_PATH%/}"/"${FACEBOOK_LOG_FILE}" bridge_ matrix matrixfacebook
+                create_logrotate bridge_facebook "${FACEBOOK_LOG_PATH%/}"/"${FACEBOOK_LOG_FILE}" bridge_facebook matrix matrix
                 yq -i '
                         .logging.writers = [
                             {
@@ -774,7 +774,7 @@ matrixbridges_configure_facebook() {
                       ' "${FACEBOOK_CONFIG_PATH%/}"/"${FACEBOOK_CONFIG_FILE}"
             ;;
             "file" )
-                create_logrotate bridge_facebook "${FACEBOOK_LOG_PATH%/}"/"${FACEBOOK_LOG_FILE}" bridge_ matrix matrixfacebook
+                create_logrotate bridge_facebook "${FACEBOOK_LOG_PATH%/}"/"${FACEBOOK_LOG_FILE}" bridge_facebook matrix matrix
                 yq -i '
                         .logging.writers = [
                             {
@@ -1020,14 +1020,14 @@ matrixbridges_configure_googlechat() {
 
         case "${GOOGLECHAT_LOG_TYPE,,}" in
             "both" )
-                create_logrotate bridge_googlechat "${GOOGLECHAT_LOG_PATH%/}"/"${GOOGLECHAT_LOG_FILE}" bridge_ matrix matrixgooglechat
+                create_logrotate bridge_googlechat "${GOOGLECHAT_LOG_PATH%/}"/"${GOOGLECHAT_LOG_FILE}" bridge_googlechat matrix matrix
                 export GOOGLECHAT_LOG_TYPE="console,file"
             ;;
             "console" )
                 export GOOGLECHAT_LOG_TYPE="console"
             ;;
             "file" )
-                create_logrotate bridge_googlechat "${GOOGLECHAT_LOG_PATH%/}"/"${GOOGLECHAT_LOG_FILE}" bridge_ matrix matrixgooglechat
+                create_logrotate bridge_googlechat "${GOOGLECHAT_LOG_PATH%/}"/"${GOOGLECHAT_LOG_FILE}" bridge_googlechat matrix matrix
                 export GOOGLECHAT_LOG_TYPE="file"
             ;;
         esac
@@ -1620,7 +1620,7 @@ matrixbridges_configure_instagram() {
         yq -i '.logging.min_level = env(INSTAGRAM_LOG_LEVEL)' "${INSTAGRAM_CONFIG_PATH%/}"/"${INSTAGRAM_CONFIG_FILE}"
         case "${INSTAGRAM_LOG_TYPE,,}" in
             "both" )
-                create_logrotate bridge_instagram "${INSTAGRAM_LOG_PATH%/}"/"${INSTAGRAM_LOG_FILE}" bridge_ matrix matrixinstagram
+                create_logrotate bridge_instagram "${INSTAGRAM_LOG_PATH%/}"/"${INSTAGRAM_LOG_FILE}" bridge_instagram matrix matrix
                 yq -i '
                         .logging.writers = [
                             {
@@ -1648,7 +1648,7 @@ matrixbridges_configure_instagram() {
                       ' "${INSTAGRAM_CONFIG_PATH%/}"/"${INSTAGRAM_CONFIG_FILE}"
             ;;
             "file" )
-                create_logrotate bridge_instagram "${INSTAGRAM_LOG_PATH%/}"/"${INSTAGRAM_LOG_FILE}" bridge_ matrix matrixinstagram
+                create_logrotate bridge_instagram "${INSTAGRAM_LOG_PATH%/}"/"${INSTAGRAM_LOG_FILE}" bridge_instagram matrix matrix
                 yq -i '
                         .logging.writers = [
                             {
@@ -1926,7 +1926,7 @@ matrixbridges_configure_signal() {
         yq -i '.logging.min_level = env(SIGNAL_LOG_LEVEL)' "${SIGNAL_CONFIG_PATH%/}"/"${SIGNAL_CONFIG_FILE}"
         case "${SIGNAL_LOG_TYPE,,}" in
             "both" )
-                create_logrotate bridge_signal "${SIGNAL_LOG_PATH%/}"/"${SIGNAL_LOG_FILE}" bridge_ matrix matrixsignal
+                create_logrotate bridge_signal "${SIGNAL_LOG_PATH%/}"/"${SIGNAL_LOG_FILE}" bridge_signal matrix matrix
                 yq -i '
                         .logging.writers = [
                             {
@@ -1954,7 +1954,7 @@ matrixbridges_configure_signal() {
                       ' "${SIGNAL_CONFIG_PATH%/}"/"${SIGNAL_CONFIG_FILE}"
             ;;
             "file" )
-                create_logrotate bridge_signal "${SIGNAL_LOG_PATH%/}"/"${SIGNAL_LOG_FILE}" bridge_ matrix matrixsignal
+                create_logrotate bridge_signal "${SIGNAL_LOG_PATH%/}"/"${SIGNAL_LOG_FILE}" bridge_signal matrix matrix
                 yq -i '
                         .logging.writers = [
                             {
@@ -2192,7 +2192,7 @@ matrixbridges_configure_slack() {
 
         case "${SLACK_LOG_TYPE,,}" in
             "both" )
-                create_logrotate bridge_slack "${SLACK_LOG_PATH%/}"/"${SLACK_LOG_FILE}" bridge_ matrix matrixslack
+                create_logrotate bridge_slack "${SLACK_LOG_PATH%/}"/"${SLACK_LOG_FILE}" bridge_slack matrix matrix
                 export SLACK_LOG_TYPE="console,file"
             ;;
             "console" )
@@ -2200,7 +2200,7 @@ matrixbridges_configure_slack() {
                 export SLACK_LOG_FILE="null"
             ;;
             "file" )
-                create_logrotate bridge_slack "${SLACK_LOG_PATH%/}"/"${SLACK_LOG_FILE}" bridge_ matrix matrixslack
+                create_logrotate bridge_slack "${SLACK_LOG_PATH%/}"/"${SLACK_LOG_FILE}" bridge_slack matrix matrix
                 export SLACK_LOG_TYPE="file"
             ;;
         esac
@@ -2557,14 +2557,14 @@ matrixbridges_configure_telegram() {
 
         case "${TELEGRAM_LOG_TYPE,,}" in
             "both" )
-                create_logrotate bridge_telegram "${TELEGRAM_LOG_PATH%/}"/"${TELEGRAM_LOG_FILE}" bridge_ matrix matrixtelegram
+                create_logrotate bridge_telegram "${TELEGRAM_LOG_PATH%/}"/"${TELEGRAM_LOG_FILE}" bridge_telegram matrix matrix
                 export TELEGRAM_LOG_TYPE="console,file"
             ;;
             "console" )
                 export TELEGRAM_LOG_TYPE="console"
             ;;
             "file" )
-                create_logrotate bridge_telegram "${TELEGRAM_LOG_PATH%/}"/"${TELEGRAM_LOG_FILE}" bridge_ matrix matrixtelegram
+                create_logrotate bridge_telegram "${TELEGRAM_LOG_PATH%/}"/"${TELEGRAM_LOG_FILE}" bridge_telegram matrix matrix
                 export TELEGRAM_LOG_TYPE="file"
             ;;
         esac
