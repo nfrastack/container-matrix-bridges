@@ -2724,7 +2724,7 @@ matrixbridges_configure_whatsapp() {
                                         .segment_key = env(WHATSAPP_SEGMENT_API_KEY)
                                     ' "${WHATSAPP_CONFIG_PATH%/}"/"${WHATSAPP_CONFIG_FILE}"
 
-       s6-setuidgid matrix yq -i    '
+        s6-setuidgid matrix yq -i   '
                                         .whatsapp.os_name = env(WHATSAPP_OS_NAME) |
                                         .whatsapp.browser_name = env(WHATSAPP_BROWSER_NAME)
                                     ' "${WHATSAPP_CONFIG_PATH%/}"/"${WHATSAPP_CONFIG_FILE}"
@@ -2857,54 +2857,55 @@ matrixbridges_configure_whatsapp() {
                             }
                         ]
                       ' "${WHATSAPP_CONFIG_PATH%/}"/"${WHATSAPP_CONFIG_FILE}"
-            ;;
-        esac
+                ;;
+            esac
 
-        #case "${WHATSAPP_LOG_TYPE,,}" in
-        #    "both" )
-        #        create_logrotate bridge_whatsapp "${WHATSAPP_LOG_PATH%/}"/"${WHATSAPP_LOG_FILE}" bridge_ matrix matrixwhatsapp
-        #        export WHATSAPP_LOG_TYPE="console,file"
-        #    ;;
-        #    "console" )
-        #        export WHATSAPP_LOG_TYPE="console"
-        #        export WHATSAPP_LOG_FILE="null"
-        #    ;;
-        #    "file" )
-        #        create_logrotate bridge_whatsapp "${WHATSAPP_LOG_PATH%/}"/"${WHATSAPP_LOG_FILE}" bridge_ matrix matrixwhatsapp
-        #        export WHATSAPP_LOG_TYPE="file"
-        #    ;;
-        #esac
+            #case "${WHATSAPP_LOG_TYPE,,}" in
+            #    "both" )
+            #        create_logrotate bridge_whatsapp "${WHATSAPP_LOG_PATH%/}"/"${WHATSAPP_LOG_FILE}" bridge_ matrix matrixwhatsapp
+            #        export WHATSAPP_LOG_TYPE="console,file"
+            #    ;;
+            #    "console" )
+            #        export WHATSAPP_LOG_TYPE="console"
+            #        export WHATSAPP_LOG_FILE="null"
+            #    ;;
+            #    "file" )
+            #        create_logrotate bridge_whatsapp "${WHATSAPP_LOG_PATH%/}"/"${WHATSAPP_LOG_FILE}" bridge_ matrix matrixwhatsapp
+            #        export WHATSAPP_LOG_TYPE="file"
+            #    ;;
+            #esac
 #
-        #s6-setuidgid matrix yq -i   '
-        #                                .logging.directory = "'$(echo "${WHATSAPP_LOG_PATH}")'" |
-        #                                .logging.file_name_format = env(WHATSAPP_LOG_FILE) |
-        #                                .logging.print_level = env(WHATSAPP_LOG_LEVEL) |
-        #                                .logging.root.handlers = [ "'$(echo "${WHATSAPP_LOG_TYPE,,//,/\",\"}")'" ] |
-        #                                .logging.file_mode = "0o777" |
-        #                                .logging.timestamp_format = "2006-01-02 15:04:05"
-        #                            ' "${WHATSAPP_CONFIG_PATH%/}"/"${WHATSAPP_CONFIG_FILE}"
+            #s6-setuidgid matrix yq -i   '
+            #                                .logging.directory = "'$(echo "${WHATSAPP_LOG_PATH}")'" |
+            #                                .logging.file_name_format = env(WHATSAPP_LOG_FILE) |
+            #                                .logging.print_level = env(WHATSAPP_LOG_LEVEL) |
+            #                                .logging.root.handlers = [ "'$(echo "${WHATSAPP_LOG_TYPE,,//,/\",\"}")'" ] |
+            #                                .logging.file_mode = "0o777" |
+            #                                .logging.timestamp_format = "2006-01-02 15:04:05"
+            #                            ' "${WHATSAPP_CONFIG_PATH%/}"/"${WHATSAPP_CONFIG_FILE}"
 #
-        #create_logrotate bridge_whatsapp "${WHATSAPP_LOG_PATH%/}"/"${WHATSAPP_LOG_FILE}" bridge_ matrix matrixwhatsapp
+            #create_logrotate bridge_whatsapp "${WHATSAPP_LOG_PATH%/}"/"${WHATSAPP_LOG_FILE}" bridge_ matrix matrixwhatsapp
 
-        if [ ! -f "${WHATSAPP_REGISTRATION_PATH%/}"/"${WHATSAPP_REGISTRATION_FILE}" ] ; then
-            print_notice "[configure_whatsapp] Didn't find a registration file. Generating to '${WHATSAPP_REGISTRATION_PATH}/${WHATSAPP_REGISTRATION_FILE}'"
-            wa_generate_registration=true
-        elif var_true "${WHATSAPP_REGENERATE_REGISTRATION}" ; then
-            print_notice "[configure_whatsapp] Regenerating registration file to '${WHATSAPP_REGISTRATION_PATH}/${WHATSAPP_REGISTRATION_FILE}'"
-            wa_generate_registration=true
-        elif var_true "${wa_force_registration}" ; then
-            print_notice "[configure_whatsapp] Something has changed  - Force generating registration file to '${WHATSAPP_REGISTRATION_PATH}/${WHATSAPP_REGISTRATION_FILE}'"
-            wa_generate_registration=true
-        fi
+            if [ ! -f "${WHATSAPP_REGISTRATION_PATH%/}"/"${WHATSAPP_REGISTRATION_FILE}" ] ; then
+                print_notice "[configure_whatsapp] Didn't find a registration file. Generating to '${WHATSAPP_REGISTRATION_PATH}/${WHATSAPP_REGISTRATION_FILE}'"
+                wa_generate_registration=true
+            elif var_true "${WHATSAPP_REGENERATE_REGISTRATION}" ; then
+                print_notice "[configure_whatsapp] Regenerating registration file to '${WHATSAPP_REGISTRATION_PATH}/${WHATSAPP_REGISTRATION_FILE}'"
+                wa_generate_registration=true
+            elif var_true "${wa_force_registration}" ; then
+                print_notice "[configure_whatsapp] Something has changed  - Force generating registration file to '${WHATSAPP_REGISTRATION_PATH}/${WHATSAPP_REGISTRATION_FILE}'"
+                wa_generate_registration=true
+            fi
 
-        if var_true "${wa_generate_registration}" ; then
-            s6-setuidgid matrix mkdir -p "${WHATSAPP_REGISTRATION_PATH}"
-            silent s6-setuidgid matrix mautrix-whatsapp \
-                                                    -g \
-                                                    -c "${WHATSAPP_CONFIG_PATH%/}"/"${WHATSAPP_CONFIG_FILE}" \
-                                                    -r "${WHATSAPP_REGISTRATION_PATH%/}"/"${WHATSAPP_REGISTRATION_FILE}" \
-                                                    || exit $?
-            print_notice "[configure_whatsapp] See https://docs.mau.fi/bridges/general/registering-appservices.html to add to your homeserver"
+            if var_true "${wa_generate_registration}" ; then
+                s6-setuidgid matrix mkdir -p "${WHATSAPP_REGISTRATION_PATH}"
+                silent s6-setuidgid matrix mautrix-whatsapp \
+                                                        -g \
+                                                        -c "${WHATSAPP_CONFIG_PATH%/}"/"${WHATSAPP_CONFIG_FILE}" \
+                                                        -r "${WHATSAPP_REGISTRATION_PATH%/}"/"${WHATSAPP_REGISTRATION_FILE}" \
+                                                        || exit $?
+                print_notice "[configure_whatsapp] See https://docs.mau.fi/bridges/general/registering-appservices.html to add to your homeserver"
+            fi
         fi
     fi
 }
