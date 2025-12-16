@@ -40,6 +40,7 @@ COPY README.md /usr/src/container/README.md
 
 ENV \
     FFMPEG_BINARY=/usr/bin/ffmpeg \
+    CONTAINER_ENABLE_SCHEDULING=TRUE \
     IMAGE_NAME="nfrastack/matrix-bridges" \
     IMAGE_REPO_URL="https://github.com/nfrastack/conmtainer-matrix-bridges/"
 

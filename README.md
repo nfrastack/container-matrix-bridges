@@ -10,6 +10,7 @@ This will build a container image for various Matrix Bridges, to interconnect se
 
 ## Table of Contents
 
+
 - [About](#about)
 - [Maintainer](#maintainer)
 - [Table of Contents](#table-of-contents)
@@ -21,24 +22,21 @@ This will build a container image for various Matrix Bridges, to interconnect se
   - [Persistent Storage](#persistent-storage)
 - [Environment Variables](#environment-variables)
   - [Base Images used](#base-images-used)
-  - [Container Options](#container-options)
-  - [Controller Options](#controller-options)
-  - [UI Options](#ui-options)
-  - [DNS Options](#dns-options)
+  - [Discord](#discord)
+  - [Facebook](#facebook)
+  - [Google Chat](#google-chat)
+  - [Instagram](#instagram)
+  - [Signal](#signal)
+  - [Slack](#slack)
+  - [Telegram](#telegram)
+  - [Twitter](#twitter)
+  - [Whatsapp](#whatsapp)
+- [Networking](#networking)
 - [Users and Groups](#users-and-groups)
 - [Maintenance](#maintenance)
   - [Shell Access](#shell-access)
 - [Support & Maintenance](#support--maintenance)
-- [References](#references)
 - [License](#license)
-
-## Prerequisites and Assumptions
-
-- Assumes you are using some sort of SSL terminating reverse proxy such as:
-  - [Traefik](https://github.com/tiredofit/docker-traefik)
-  - [Nginx](https://github.com/jc21/nginx-proxy-manager)
-  - [Caddy](https://github.com/caddyserver/caddy)
-- Requires access to a PostgreSQL Server if using the UI
 
 ## Installation
 
@@ -104,7 +102,6 @@ Be sure to view the following repositories to understand all the customizable op
 | Image                                                   | Description     |
 | ------------------------------------------------------- | --------------- |
 | [OS Base](https://github.com/nfrastack/container-base/) | Base Image      |
-| [Nginx](https://github.com/nfrastack/container-nginx/)  | Webserver Image |
 
 Below is the complete list of available options that can be used to customize your installation.
 
