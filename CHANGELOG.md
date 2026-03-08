@@ -2,10 +2,10 @@
 
    ### Added
       - Switch to nfrastack/container-base
-      - Alpine 3.22
-      - Mautrix Meta 0.202512.0
-      - Mautrix Signal 0.202512.0
-      - Mautrix Whatsapp 0.202512.0
+      - Alpine 3.23
+      - Mautrix Meta 0.202602.0
+      - Mautrix Signal 0.202602.2
+      - Mautrix Whatsapp 0.202602.0
 
 ## 0.0.32 2025-09-28 <dave at tiredofit dot ca>
 
