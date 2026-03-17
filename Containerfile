@@ -21,10 +21,10 @@ ARG \
       HOOKSHOT_VERSION="5.2.1" \
       IMESSAGE_VERSION="7a7312c59b0dd56c54f14ebfd047fcb7c32b6ea6" \
       META_VERSION="v0.2602.0" \
-      SIGNAL_VERSION="v0.2602.2" \
+      SIGNAL_VERSION="v0.2603.0" \
       SLACK_VERSION="v0.2602.0" \
       TELEGRAM_VERSION="v0.15.1" \
-      WHATSAPP_VERSION="v0.2602.0" \
+      WHATSAPP_VERSION="v0.2603.0" \
       DISCORD_REPO_URL="https://github.com/mautrix/discord" \
       HOOKSHOT_REPO_URL="https://github.com/matrix-org/matrix-hookshot" \
       IMESSAGE_REPO_URL="https://github.com/mautrix/imessage" \
