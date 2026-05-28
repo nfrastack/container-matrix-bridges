@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: © 2025 Nfrastack <code@nfrastack.com>
+# SPDX-FileCopyrightText: © 2026 Nfrastack <code@nfrastack.com>
 #
 # SPDX-License-Identifier: MIT
 
@@ -166,7 +166,7 @@ RUN echo "" && \
                     MATRIXBRIDGES_BUILD_DEPS \
                     MATRIXBRIDGES_RUN_DEPS \
                     && \
-    package build go && \
+    package build go buildtime && \
     package build yq && \
     #
     #package install \
