@@ -20,11 +20,11 @@ ARG \
       DISCORD_VERSION="v0.7.6" \
       HOOKSHOT_VERSION="5.2.1" \
       IMESSAGE_VERSION="7a7312c59b0dd56c54f14ebfd047fcb7c32b6ea6" \
-      META_VERSION="v0.2602.0" \
-      SIGNAL_VERSION="v0.2603.0" \
+      META_VERSION="v0.2605.1" \
+      SIGNAL_VERSION="v0.2605.0" \
       SLACK_VERSION="v0.2602.0" \
-      TELEGRAM_VERSION="v0.15.1" \
-      WHATSAPP_VERSION="v0.2603.0" \
+      TELEGRAM_VERSION="v0.2505.0" \
+      WHATSAPP_VERSION="v0.2605.0" \
       DISCORD_REPO_URL="https://github.com/mautrix/discord" \
       HOOKSHOT_REPO_URL="https://github.com/matrix-org/matrix-hookshot" \
       IMESSAGE_REPO_URL="https://github.com/mautrix/imessage" \
@@ -111,38 +111,11 @@ RUN echo "" && \
                             ffmpeg \
                           " && \
     TELEGRAM_BUILD_DEPS_ALPINE=" \
-                                    libffi-dev  \
-                                    py3-pip \
-                                    py3-setuptools \
-                                    py3-setuptools-rust \
-                                    py3-wheel \
-                                    py3-pillow \
-                                    python3-dev \
                                " \
                                && \
     TELEGRAM_RUN_DEPS_ALPINE="  \
+                                olm \
                                 ffmpeg \
-                                py3-aiohttp \
-                                py3-cffi \
-                                py3-commonmark \
-                                py3-decorator \
-                                py3-future \
-                                py3-idna \
-                                py3-magic \
-                                py3-mako \
-                                py3-numpy \
-                                py3-olm \
-                                py3-phonenumbers \
-                                py3-pillow \
-                                py3-pyaes \
-                                py3-pycryptodome \
-                                py3-pysocks \
-                                py3-qrcode \
-                                py3-requests \
-                                py3-rsa \
-                                py3-ruamel.yaml \
-                                py3-tqdm \
-                                py3-unpaddedbase64 \
                              " && \
     WHATSAPP_BUILD_DEPS_ALPINE=" \
                                     olm-dev \
