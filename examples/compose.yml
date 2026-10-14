@@ -59,7 +59,7 @@ services:
     restart: always
 
   matrix-bridges-db-backup:
-    image: docker.io/tiredofit/db-backup
+    image: docker.io/nfrastack/db-backup
     container_name: matrix-bridges-db-backup
     volumes:
       - ./dbbackup:/backup
@@ -67,6 +67,8 @@ services:
       - TIMEZONE=America/Vancouver
       - CONTAINER_ENABLE_MONITORING=FALSE
       - CONTAINER_NAME=matrix-bridges-db-backup
+
+      - STATS_ENABLED=TRUE
 
       - DB_HOST=matrix-bridges-db
       - DB_TYPE=postgres
