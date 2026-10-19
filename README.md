@@ -537,11 +537,14 @@ Signal bridge provided by [Mautrix Signal Bridge](https://github.com/mautrix/sig
 | `SIGNAL_REGISTRATION_PATH`                           |             | `${REGISTRATION_PATH}`                         |
 | `SIGNAL_REMOVE_FILE_AFTER_HANDLING`                  |             | `TRUE`                                         |
 | `SIGNAL_RESEND_BRIDGE_INFO`                          |             | `FALSE`                                        |
+| `SIGNAL_SYNC_CONTACTS_ON_STARTUP`                    |             | `TRUE`                                         |
 | `SIGNAL_SYNC_DIRECT_CHAT_LIST`                       |             | `FALSE`                                        |
 | `SIGNAL_SYNC_WITH_CUSTOM_PUPPETS`                    |             | `FALSE`                                        |
-| `SIGNAL_TEMPLATE_DISPLAYNAME`                        |             | `{displayname} (Signal)`                       |
+| `SIGNAL_TEMPLATE_DISPLAYNAME`                        |             | `{{or .ContactName .Nickname .ProfileName .PhoneNumber "Unknown user"}}` |
 | `SIGNAL_TEMPLATE_DISPLAYNAME_PREFERENCE`             |             | `full_name,phone`                              |
 | `SIGNAL_TEMPLATE_USERNAME`                           |             | `signal_{userid}`                              |
+| `SIGNAL_USE_CONTACT_AVATARS`                         |             | `FALSE`                                        |
+| `SIGNAL_USE_OUTDATED_PROFILES`                       |             | `FALSE`                                        |
 
 #### Slack
 

@@ -17,14 +17,14 @@ LABEL \
         org.opencontainers.image.licenses="MIT"
 
 ARG \
-      DISCORD_VERSION="v0.7.6" \
-      HOOKSHOT_VERSION="5.2.1" \
+      DISCORD_VERSION="v0.7.7" \
+      HOOKSHOT_VERSION="7.5.0" \
       IMESSAGE_VERSION="7a7312c59b0dd56c54f14ebfd047fcb7c32b6ea6" \
-      META_VERSION="v0.2609.0" \
-      SIGNAL_VERSION="v0.2609.0" \
-      SLACK_VERSION="v0.2609.0" \
-      TELEGRAM_VERSION="v0.2609.0" \
-      WHATSAPP_VERSION="v0.2609.0" \
+      META_VERSION="v0.2610.0" \
+      SIGNAL_VERSION="v0.2610.0" \
+      SLACK_VERSION="v0.2610.0" \
+      TELEGRAM_VERSION="v0.2610.0" \
+      WHATSAPP_VERSION="v0.2610.0" \
       DISCORD_REPO_URL="https://github.com/mautrix/discord" \
       HOOKSHOT_REPO_URL="https://github.com/matrix-org/matrix-hookshot" \
       IMESSAGE_REPO_URL="https://github.com/mautrix/imessage" \
@@ -61,10 +61,10 @@ RUN echo "" && \
                                 ffmpeg \
                             " && \
     HOOKSHOT_BUILD_DEPS_ALPINE=" \
-                                    cargo \
+                                    #cargo \
                                     nodejs \
                                     openssl-dev \
-                                    rust \
+                                    #rust \
                                     yarn \
                                " && \
     HOOKSHOT_RUN_DEPS_ALPINE="  \
@@ -86,7 +86,7 @@ RUN echo "" && \
                             ffmpeg \
                          "  && \
     SIGNAL_BUILD_DEPS_ALPINE=" \
-                                cargo \
+                                #cargo \
                                 clang-dev \
                                 cmake \
                                 g++ \
@@ -202,6 +202,13 @@ RUN echo "" && \
                     SIGNAL_BUILD_DEPS \
                     SIGNAL_RUN_DEPS \
                     && \
+    package build rust "${RUST_VERSION}" buildtime && \
+    if ! command -v cargo >/dev/null 2>&1; then \
+         echo "package build rust unavailable on base image, installing via rustup fallback..." && \
+         curl -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain "${RUST_VERSION:-stable}" && \
+         . /root/.cargo/env; \
+    fi && \
+    export PATH="/root/.cargo/bin:${PATH}" && \                    
     cd /usr/src && \
     clone_git_repo "${SIGNAL_REPO_URL}" "${SIGNAL_VERSION}" /usr/src/signal && \
     cd pkg/libsignalgo/libsignal && \

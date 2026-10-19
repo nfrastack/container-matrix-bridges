@@ -1835,34 +1835,34 @@ matrixbridges_configure_signal() {
                                             .encryption.rotation.messages = env(SIGNAL_ENCRYPTION_ROTATION_MESSAGES)
                                         ' "${SIGNAL_CONFIG_PATH%/}"/"${SIGNAL_CONFIG_FILE}"
 
-            # The following yq commands set values for keys that have moved to different sections in the config file.
-
-            # username_template is now under appservice
             s6-setuidgid matrix yq -i   '
                 .appservice.username_template = env(SIGNAL_TEMPLATE_USERNAME)
             ' "${SIGNAL_CONFIG_PATH%/}"/"${SIGNAL_CONFIG_FILE}"
 
-            # displayname_template is now under network
             s6-setuidgid matrix yq -i   '
-                .network.displayname_template = env(SIGNAL_TEMPLATE_DISPLAYNAME)
+                .network.displayname_template = strenv(SIGNAL_TEMPLATE_DISPLAYNAME)
             ' "${SIGNAL_CONFIG_PATH%/}"/"${SIGNAL_CONFIG_FILE}"
 
-            # use_contact_avatars is now under network
             s6-setuidgid matrix yq -i   '
                 .network.use_contact_avatars = env(SIGNAL_USE_CONTACT_AVATARS)
             ' "${SIGNAL_CONFIG_PATH%/}"/"${SIGNAL_CONFIG_FILE}"
 
-            # number_in_topic is now under network
+            s6-setuidgid matrix yq -i   '
+                .network.use_outdated_profiles = env(SIGNAL_USE_OUTDATED_PROFILES)
+            ' "${SIGNAL_CONFIG_PATH%/}"/"${SIGNAL_CONFIG_FILE}"
+
+            s6-setuidgid matrix yq -i   '
+                .network.sync_contacts_on_startup = env(SIGNAL_SYNC_CONTACTS_ON_STARTUP)
+            ' "${SIGNAL_CONFIG_PATH%/}"/"${SIGNAL_CONFIG_FILE}"
+
             s6-setuidgid matrix yq -i   '
                 .network.number_in_topic = env(SIGNAL_INCLUDE_NUMBER_IN_TOPIC)
             ' "${SIGNAL_CONFIG_PATH%/}"/"${SIGNAL_CONFIG_FILE}"
 
-            # note_to_self_avatar is now under network
             s6-setuidgid matrix yq -i   '
                 .network.note_to_self_avatar = env(SIGNAL_NOTE_TO_SELF_AVATAR)
             ' "${SIGNAL_CONFIG_PATH%/}"/"${SIGNAL_CONFIG_FILE}"
 
-            # bridge_notices, delivery_receipts, message_status_events, message_error_notices, sync_direct_chat_list, federate_rooms are now under matrix
             s6-setuidgid matrix yq -i   '
                 .matrix.bridge_notices = env(SIGNAL_BRIDGE_NOTICES) |
                 .matrix.delivery_receipts = env(SIGNAL_ENABLE_DELIVERY_RECEIPTS) |
